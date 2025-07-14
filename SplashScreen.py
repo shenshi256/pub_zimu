@@ -68,11 +68,16 @@ class SplashScreen(QMainWindow):
         # 启动加载过程
         self.start_loading()
 
-    def show_main_window(self):
+    # def show_main_window(self):
+    #     """显示主窗口"""
+    #     # 延迟导入，避免循环导入
+    #     from main import show_main_window
+    #     self.main_window = show_main_window()
+
+    def show_main_window(self, trial_mode=False):
         """显示主窗口"""
-        # 延迟导入，避免循环导入
         from main import show_main_window
-        self.main_window = show_main_window()
+        self.main_window = show_main_window(trial_mode=trial_mode)
 
     def init_ui(self):
         """初始化UI界面"""
@@ -250,22 +255,49 @@ class SplashScreen(QMainWindow):
         except Exception:
             return False
 
+    # def show_auth_window(self):
+    #     """显示授权窗口"""
+    #     self.auth_window = AuthWindow()
+    #     self.auth_window.auth_success.connect(self.on_auth_success)
+    #     self.auth_window.show()
+    #     # 授权窗口显示后关闭启动界面
+    #     self.close()
+
     def show_auth_window(self):
         """显示授权窗口"""
         self.auth_window = AuthWindow()
+        # 连接授权成功信号
         self.auth_window.auth_success.connect(self.on_auth_success)
+        # 连接试用模式成功信号
+        self.auth_window.trial_mode_success.connect(self.on_trial_success)
         self.auth_window.show()
         # 授权窗口显示后关闭启动界面
         self.close()
 
 
+
+    # def on_auth_success(self):
+    #     """授权成功回调"""
+    #     self.auth_window.close()
+    #     # 授权成功后显示主窗口
+    #     self.show_main_window()
+    #     # 关闭启动界面
+    #     self.close()
+
     def on_auth_success(self):
         """授权成功回调"""
         self.auth_window.close()
-        # 授权成功后显示主窗口
-        self.show_main_window()
-        # 关闭启动界面
+        # 授权成功后显示主窗口（正常模式）
+        self.show_main_window(trial_mode=False)
         self.close()
+
+    def on_trial_success(self):
+        """试用模式成功回调"""
+        self.auth_window.close()
+        # 试用模式下显示主窗口
+        self.show_main_window(trial_mode=True)
+        self.close()
+
 
 
 if __name__ == "__main__":

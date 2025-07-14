@@ -35,7 +35,7 @@ from utils import show_info, show_warning, show_error, setup_window_icon, VERSIO
 class AuthWindow(QMainWindow):
     # 定义信号，当授权成功时发出
     auth_success = Signal()
-
+    trial_mode_success = Signal()  # 试用模式成功信号
     def __init__(self, clear_registry=True):
         super().__init__()
 
@@ -65,7 +65,86 @@ class AuthWindow(QMainWindow):
         self.ui.chkDebug.stateChanged.connect(self.on_debug_changed)
         self.load_debug_setting()
 
+        # 连接试用按钮事件
+        self.ui.btnTryUse.clicked.connect(self.start_trial_mode)
+
         logger_manager.info("授权窗口初始化完成", "auth_window")
+
+    def start_trial_mode(self):
+        """启动试用模式"""
+        try:
+            # 检查试用次数限制
+            if not self.check_trial_limit():
+                return
+
+            # 记录试用次数
+            self.record_trial_usage()
+
+            # 发出试用模式成功信号
+            self.trial_mode_success.emit()
+            self.close()  # 关闭授权窗口
+
+            logger_manager.info("用户选择试用模式", "auth_window")
+
+        except Exception as e:
+            logger_manager.error(f"启动试用模式失败: {e}", "auth_window")
+            show_error(self, "错误", f"启动试用模式失败: {e}")
+
+    def check_trial_limit(self):
+        """检查试用次数限制（每天3次）"""
+        try:
+            settings = settings_manager.settings
+            today = datetime.now().strftime('%Y-%m-%d')
+
+            # 获取今日试用次数
+            trial_date = settings.value("trial/last_trial_date", "")
+            trial_count = settings.value("trial/trial_count", 0, type=int)
+
+            # 如果是新的一天，重置试用次数
+            if trial_date != today:
+                trial_count = 0
+                settings.setValue("trial/last_trial_date", today)
+                settings.setValue("trial/trial_count", 0)
+                settings.sync()
+
+            # 检查是否超过限制
+            if trial_count >= 3:
+                show_warning(self, "试用限制",
+                             "今日试用次数已用完（每天限制3次）\n\n" +
+                             "如需继续使用，请联系客服获取授权码")
+                return False
+
+            return True
+
+        except Exception as e:
+            logger_manager.error(f"检查试用次数失败: {e}", "auth_window")
+            return False
+
+    def record_trial_usage(self):
+        """记录试用次数"""
+        try:
+            settings = settings_manager.settings
+            trial_count = settings.value("trial/trial_count", 0, type=int)
+            trial_count += 1
+
+            settings.setValue("trial/trial_count", trial_count)
+            settings.sync()
+
+            remaining = 3 - trial_count
+            if remaining > 0:
+                show_info(self, "试用模式",
+                          f"进入试用模式成功！\n\n" +
+                          f"今日剩余试用次数：{remaining}次\n" +
+                          f"试用模式限制：音视频时长不超过10分钟")
+            else:
+                show_info(self, "试用模式",
+                          f"进入试用模式成功！\n\n" +
+                          f"这是今日最后一次试用机会\n" +
+                          f"试用模式限制：音视频时长不超过10分钟")
+
+        except Exception as e:
+            logger_manager.error(f"记录试用次数失败: {e}", "auth_window")
+
 
     def clear_auth_registry(self):
         """清空注册表中auth下的所有键值"""
@@ -360,9 +439,7 @@ class AuthWindow(QMainWindow):
             return
 
         decrypted = aes_decrypt(auth_code)
-        print(decrypted)
-        # A0BnqMlvEmNFoHBfo7I0fgUVfs8H+NCDkTfSXbdZR0Y=
-        # A0BnqMlvEmNFoHBfo7I0fgUVfs8H+NCDkTfSXbdZR0Y=|2025-06-26 18:05:15
+       # print(decrypted) 
         # 如果decrypted为None，则说明解密失败
         if decrypted is None:
             show_warning(self, "错误", "授权码不正确")

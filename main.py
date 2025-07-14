@@ -44,8 +44,10 @@ def ensure_model_directory():
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, trial_mode=False):
         super().__init__()
+        self.trial_mode = trial_mode  # 试用模式标识
+
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         setup_window_icon(self)
@@ -136,6 +138,45 @@ class MainWindow(QMainWindow):
         # 连接日志管理器的UI更新信号
         logger_manager.ui_update_signal.connect(self.update_ui_log)
         logger_manager.batch_update_signal.connect(self.batch_update_ui_log)  # 新增批量更新信号
+
+    def check_media_duration(self, file_path):
+        """检查音视频文件时长"""
+        """使用moviepy检查音视频文件时长"""
+        try:
+            from moviepy.editor import VideoFileClip
+
+            # 使用 VideoFileClip 处理音视频文件
+            with VideoFileClip(file_path) as clip:
+                duration = clip.duration  # 返回秒数（浮点数）
+                return duration
+
+        except Exception as e:
+            logger_manager.error(f"使用moviepy检查文件时长失败: {e}", "main")
+            return None
+        # try:
+        #     import subprocess
+        #     import json
+        #
+        #     # 使用ffprobe获取文件信息
+        #     cmd = [
+        #         'ffprobe', '-v', 'quiet', '-print_format', 'json',
+        #         '-show_format', file_path
+        #     ]
+        #
+        #     result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+        #
+        #     if result.returncode == 0:
+        #         data = json.loads(result.stdout)
+        #         duration = float(data['format']['duration'])
+        #         return duration
+        #     else:
+        #         logger_manager.warning(f"无法获取文件时长: {file_path}", "main")
+        #         return None
+        #
+        # except Exception as e:
+        #     logger_manager.error(f"检查文件时长失败: {e}", "main")
+        #     return None
+
 
     def update_ui_log(self, message):
         """线程安全的UI日志更新"""
@@ -399,7 +440,6 @@ class MainWindow(QMainWindow):
         )
         if file_path:
             self.ui.textEdit.setText(file_path)
-            # ✅ 修正：使用正确的 PySide6 语法
             self.ui.textEdit.moveCursor(QTextCursor.MoveOperation.End)
             # ✅ 保存当前目录作为下次默认目录, 这个文件存储在:
             self.settings.setValue("last_directory", os.path.dirname(file_path))
@@ -426,6 +466,30 @@ class MainWindow(QMainWindow):
             show_warning(self, "提示", "请先下载模型文件到model目录")
             #QMessageBox.warning(self, "错误", "请选择一个模型文件")
             return
+        if not file_path or not os.path.exists(file_path):
+            show_warning(self, "提示", "请选择一个有效的音频或视频文件")
+            return
+
+        if model_file == "请选择模型":
+            show_warning(self, "提示", "请先下载模型文件到model目录")
+            return
+
+        # 试用模式下检查文件时长
+        if self.trial_mode:
+            duration_seconds = self.check_media_duration(file_path)
+            if duration_seconds is None:
+                show_warning(self, "错误", "无法获取文件时长，请确保文件格式正确")
+                return
+
+            # 将秒转换为分钟
+            duration_minutes = duration_seconds / 60
+
+            if duration_minutes > 10:
+                show_warning(self, "试用限制",
+                             f"试用模式下仅支持【10分钟】以内的音视频文件\n"
+                             f"当前文件时长: 【{duration_minutes:.1f}】分钟\n\n"
+                             f"如需处理更长的文件，请购买授权码")
+                return
         # ✅ 检查调试模式并初始化日志文件
         self.setup_debug_logging()
         full_model_path = os.path.join(self.model_dir, model_file)
@@ -736,11 +800,23 @@ def show_auth_window():
     auth_window.show()
     return auth_window
 
-def show_main_window():
+# def show_main_window():
+#     """显示主窗口"""
+#     main_window = MainWindow()
+#     # main_window.setWindowTitle("字幕生成器")
+#     main_window.setWindowTitle(f"字幕生成器 {VERSION}")
+#     main_window.show()
+#     return main_window
+
+def show_main_window(trial_mode=False):
     """显示主窗口"""
-    main_window = MainWindow()
-    # main_window.setWindowTitle("字幕生成器")
-    main_window.setWindowTitle(f"字幕生成器 {VERSION}")
+    main_window = MainWindow(trial_mode=trial_mode)
+
+    if trial_mode:
+        main_window.setWindowTitle(f"字幕生成器 (试用) {VERSION}")
+    else:
+        main_window.setWindowTitle(f"字幕生成器 {VERSION}")
+
     main_window.show()
     return main_window
 
@@ -800,263 +876,3 @@ if __name__ == "__main__":
         sys.exit(1)
 
 
-
-# if __name__ == "__main__":
-#     # 注册全局异常处理器（必须在QApplication创建之前）
-#     # 在创建QApplication之前注册全局异常处理
-#     exception_handler = GlobalExceptionHandler()
-#     sys.excepthook = exception_handler.handle_exception
-#
-#     app = QApplication(sys.argv)
-#
-#
-#
-#     # ✅ 添加中文语言环境设置
-#     from PySide6.QtCore import QLocale, QTranslator, QLibraryInfo
-#
-#     # 设置应用程序语言环境为中文
-#     locale = QLocale(QLocale.Language.Chinese, QLocale.Country.China)
-#     QLocale.setDefault(locale)
-#
-#     # 加载Qt内置的中文翻译文件（用于右键菜单等系统控件）
-#     translator = QTranslator()
-#     # 使用正确的Qt翻译文件路径
-#     qt_translations_path = QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath)
-#     if translator.load(locale, "qtbase", "_", qt_translations_path):
-#         app.installTranslator(translator)
-#     else:
-#         # 备选方案：尝试加载 qt_ 前缀的翻译文件
-#         if translator.load(locale, "qt", "_", qt_translations_path):
-#             app.installTranslator(translator)
-#
-#
-#     # import whisper
-#     # 会自动下载模型到缓存目录
-#     # model = whisper.load_model("tiny.en")  # 也可以是 base, small, medium, large
-#     # model = whisper.load_model("base.en")
-#     # model = whisper.load_model("small.en")
-#     # model = whisper.load_model("medium.en")
-#     # model = whisper.load_model("large")  # 目前已经没有这个版本了, 下载这个时候, 会默认下载V3的版本
-#     # model = whisper.load_model("large-v1")
-#     # model = whisper.load_model("large-v2")
-#     # model = whisper.load_model("large-v3")
-#
-#     # 创建单实例管理器, 这个名字要和build-obf.spec里面的名字保持一致
-#     instance_manager = SingleInstanceManager("字幕生成器")
-#
-#     # 检查是否已有实例在运行
-#     if instance_manager.is_running():
-#         logger_manager.info("应用程序已运行", "main")
-#         sys.exit(0)
-#
-#     # 启动单实例服务器
-#     if not instance_manager.start_server():
-#         logger_manager.error("无法启动单实例服务", "main")
-#         sys.exit(1)
-#
-#     # 全局变量用于存储主窗口引用
-#     main_window = None
-#     auth_window = None
-#
-# #    test_exception_handler( )
-#     def bring_window_to_front():
-#         """将窗口置于前台"""
-#         global main_window, auth_window
-#
-#         # 优先显示主窗口
-#         if main_window and main_window.isVisible():
-#             main_window.raise_()
-#             main_window.activateWindow()
-#             main_window.showNormal()  # 如果窗口被最小化，则恢复
-#         # 如果主窗口不可见，显示授权窗口
-#         elif auth_window and auth_window.isVisible():
-#             auth_window.raise_()
-#             auth_window.activateWindow()
-#             auth_window.showNormal()
-#
-#
-#     # 连接信号到槽函数
-#     instance_manager.show_window_signal.connect(bring_window_to_front)
-#
-#     # 步骤1: 调用 SettingsManager 的 get_auth_info() 返回授权信息
-#     machine_code, auth_time, last_auth_code = settings_manager.get_auth_info()
-#     # print("授权信息:", machine_code, auth_time, last_auth_code)
-#     # 步骤2: 检查是否有任何一个为空
-#     if not machine_code or not auth_time or not last_auth_code:
-#         print("授权信息不完整，显示授权窗口")
-#         auth_window = show_auth_window()
-#         main_window = None
-#
-#
-#         def on_auth_success():
-#             global main_window
-#             main_window = show_main_window()
-#
-#
-#         auth_window.auth_success.connect(on_auth_success)
-#     else:
-#         # 步骤3: 对last_auth_code进行第一次解密
-#         try:
-#             auth_code_one_de = aes_decrypt(last_auth_code)
-#             if auth_code_one_de is None:
-#                 raise ValueError("第一次解密失败")
-#         except Exception as e:
-#             print(f"第一次解密失败: {e}，显示授权窗口")
-#             auth_window = show_auth_window()
-#             main_window = None
-#
-#
-#             def on_auth_success():
-#                 global main_window
-#                 main_window = show_main_window()
-#
-#
-#             auth_window.auth_success.connect(on_auth_success)
-#         else:
-#             # 步骤4: 检查分隔后的元素数量
-#             auth_parts = auth_code_one_de.split("|")
-#             if len(auth_parts) != 2:
-#                 #print(f"授权码格式错误，分隔后元素数量为{len(auth_parts)}，应为2，显示授权窗口")
-#                 auth_window = show_auth_window()
-#                 main_window = None
-#
-#
-#                 def on_auth_success():
-#                     global main_window
-#                     main_window = show_main_window()
-#
-#
-#                 auth_window.auth_success.connect(on_auth_success)
-#             else:
-#                 # 步骤5: 提取第一个元素和时间
-#                 auth_code_en = auth_parts[0]
-#                 temp_time = auth_parts[1]
-#
-#                 # 对第一个元素再进行一次解密
-#                 try:
-#                     auth_code = aes_decrypt(auth_code_en)
-#                     if auth_code is None:
-#                         raise ValueError("第二次解密失败")
-#                 except Exception as e:
-#                     print(f"第二次解密失败: {e}，显示授权窗口")
-#                     auth_window = show_auth_window()
-#                     main_window = None
-#
-#
-#                     def on_auth_success():
-#                         global main_window
-#                         main_window = show_main_window()
-#
-#
-#                     auth_window.auth_success.connect(on_auth_success)
-#                 else:
-#                     # 按照 | 进行分隔
-#                     auth_code_parts = auth_code.split("|")
-#                     if len(auth_code_parts) != 2:
-#                         print(f"内层授权码格式错误，分隔后元素数量为{len(auth_code_parts)}，应为2，显示授权窗口")
-#                         auth_window = show_auth_window()
-#                         main_window = None
-#
-#
-#                         def on_auth_success():
-#                             global main_window
-#                             main_window = show_main_window()
-#
-#
-#                         auth_window.auth_success.connect(on_auth_success)
-#                     else:
-#                         auth_code_machine = auth_code_parts[0]
-#                         auth_code_day = auth_code_parts[1]
-#
-#                         # 步骤6: 获取当前设备机器码并比较
-#                         # temp_auth_window = AuthWindow()
-#                         # temp_auth_window.generate_machine_code()
-#                         # current_machine_code = temp_auth_window.ui.leMachineCode.text().replace('-', '')
-#                         # temp_auth_window.close()
-#                         # 获取机器码而不创建AuthWindow实例
-#                         current_machine_code = AuthWindow.generate_machine_code_static()
-#
-#                         if current_machine_code and auth_code_machine.replace('-', '') != current_machine_code.replace('-', ''):
-#                             print("机器码不匹配，显示授权窗口")
-#                             auth_window = show_auth_window()
-#                             main_window = None
-#
-#
-#                             def on_auth_success():
-#                                 global main_window
-#                                 main_window = show_main_window()
-#
-#
-#                             auth_window.auth_success.connect(on_auth_success)
-#                         else:
-#                             # 步骤7: 检查授权天数
-#                             try:
-#                                 auth_days = int(auth_code_day)
-#                             except ValueError:
-#                                 print("授权天数格式错误，显示授权窗口")
-#                                 auth_window = show_auth_window()
-#                                 main_window = None
-#
-#
-#                                 def on_auth_success():
-#                                     global main_window
-#                                     main_window = show_main_window()
-#
-#
-#                                 auth_window.auth_success.connect(on_auth_success)
-#                             else:
-#                                 if auth_days == 0:
-#                                     # 无限制授权
-#                                     print("检测到无限制授权，直接启动主程序")
-#                                     main_window = show_main_window()
-#                                 else:
-#                                     # 步骤8-9: 检查授权是否过期
-#                                     try:
-#                                         # 解析授权时间
-#                                         auth_datetime = datetime.strptime(temp_time, "%Y-%m-%d %H:%M:%S")
-#                                         # 计算过期时间
-#                                         expire_datetime = auth_datetime + timedelta(days=auth_days)
-#                                         # 获取当前时间
-#                                         current_datetime = datetime.now()
-#
-#                                         # 检查当前时间是否在合理范围内
-#                                         if current_datetime < auth_datetime:
-#                                             print(f"检测到系统时间异常（当前时间：{current_datetime} 早于授权时间：{auth_datetime}），显示授权窗口")
-#                                             auth_window = show_auth_window()
-#                                             main_window = None
-#                                         elif current_datetime > expire_datetime:
-#                                             print(f"授权已过期（过期时间：{expire_datetime}），显示授权窗口")
-#                                             auth_window = show_auth_window()
-#                                             main_window = None
-#                                         else:
-#                                             print(f"授权有效（授权时间：{auth_datetime}，过期时间：{expire_datetime}），直接启动主程序")
-#                                             main_window = show_main_window()
-#
-#                                         # 如果需要重新授权，绑定成功回调
-#                                         if main_window is None:
-#                                             def on_auth_success():
-#                                                 global main_window
-#                                                 main_window = show_main_window()
-#                                             auth_window.auth_success.connect(on_auth_success)
-#                                     except ValueError as e:
-#                                         print(f"时间格式解析错误: {e}，显示授权窗口")
-#                                         auth_window = show_auth_window()
-#                                         main_window = None
-#
-#
-#                                         def on_auth_success():
-#                                             global main_window
-#                                             main_window = show_main_window()
-#
-#
-#                                         auth_window.auth_success.connect(on_auth_success)
-#
-#
-#     # 在应用程序退出时清理资源
-#     def cleanup_on_exit():
-#         instance_manager.cleanup()
-#
-#
-#     app.aboutToQuit.connect(cleanup_on_exit)
-#
-#     sys.exit(app.exec())
