@@ -72,6 +72,7 @@ public:
         MainWindow->setMinimumSize(QSize(600, 400));
         MainWindow->setMaximumSize(QSize(800, 600));
         MainWindow->setMouseTracking(false);
+        MainWindow->setAcceptDrops(false);
         QIcon icon;
         icon.addFile(QStringLiteral("../../../../CsharpProject/20250218_com.wxy.toutiao/Resources/favicon.ico"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
@@ -93,6 +94,7 @@ public:
         textEdit->setSizePolicy(sizePolicy);
         textEdit->setMinimumSize(QSize(381, 31));
         textEdit->setMaximumSize(QSize(16777215, 31));
+        textEdit->setAcceptDrops(true);
         textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         textEdit->setLineWrapMode(QTextEdit::NoWrap);
 

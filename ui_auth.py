@@ -37,39 +37,75 @@ class Ui_Auth(object):
 
         self.verticalLayout_2.addItem(self.verticalSpacer)
 
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.lblMachineCode_2 = QLabel(self.centralwidget)
+        self.lblMachineCode_2.setObjectName(u"lblMachineCode_2")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lblMachineCode_2.sizePolicy().hasHeightForWidth())
+        self.lblMachineCode_2.setSizePolicy(sizePolicy)
+        self.lblMachineCode_2.setMinimumSize(QSize(120, 30))
+        self.lblMachineCode_2.setMaximumSize(QSize(120, 30))
+        font = QFont()
+        font.setFamilies([u"Arial"])
+        font.setPointSize(12)
+        self.lblMachineCode_2.setFont(font)
+        self.lblMachineCode_2.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout.addWidget(self.lblMachineCode_2)
+
+        self.lblCustomerService = QLabel(self.centralwidget)
+        self.lblCustomerService.setObjectName(u"lblCustomerService")
+        self.lblCustomerService.setMinimumSize(QSize(120, 120))
+        self.lblCustomerService.setMaximumSize(QSize(120, 120))
+        self.lblCustomerService.setPixmap(QPixmap(u"../../customer_service.png"))
+        self.lblCustomerService.setScaledContents(True)
+
+        self.verticalLayout.addWidget(self.lblCustomerService)
+
+
+        self.horizontalLayout_4.addLayout(self.verticalLayout)
+
         self.label = QLabel(self.centralwidget)
         self.label.setObjectName(u"label")
-        font = QFont()
-        font.setFamilies([u"Arial Black"])
-        font.setPointSize(24)
-        font.setBold(True)
-        self.label.setFont(font)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
+        self.label.setSizePolicy(sizePolicy1)
+        font1 = QFont()
+        font1.setFamilies([u"Arial Black"])
+        font1.setPointSize(24)
+        font1.setBold(True)
+        self.label.setFont(font1)
         self.label.setTextFormat(Qt.AutoText)
         self.label.setAlignment(Qt.AlignCenter)
 
-        self.verticalLayout.addWidget(self.label)
+        self.horizontalLayout_4.addWidget(self.label)
+
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout_4)
 
         self.verticalSpacer_3 = QSpacerItem(20, 18, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
-        self.verticalLayout.addItem(self.verticalSpacer_3)
+        self.verticalLayout_2.addItem(self.verticalSpacer_3)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.lblMachineCode = QLabel(self.centralwidget)
         self.lblMachineCode.setObjectName(u"lblMachineCode")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lblMachineCode.sizePolicy().hasHeightForWidth())
         self.lblMachineCode.setSizePolicy(sizePolicy)
         self.lblMachineCode.setMinimumSize(QSize(0, 51))
         self.lblMachineCode.setMaximumSize(QSize(16777215, 51))
-        font1 = QFont()
-        font1.setFamilies([u"Arial"])
-        font1.setPointSize(16)
-        self.lblMachineCode.setFont(font1)
+        font2 = QFont()
+        font2.setFamilies([u"Arial"])
+        font2.setPointSize(16)
+        self.lblMachineCode.setFont(font2)
 
         self.horizontalLayout.addWidget(self.lblMachineCode)
 
@@ -89,11 +125,11 @@ class Ui_Auth(object):
         self.horizontalLayout.addWidget(self.pushButton)
 
 
-        self.verticalLayout.addLayout(self.horizontalLayout)
+        self.verticalLayout_2.addLayout(self.horizontalLayout)
 
         self.verticalSpacer_4 = QSpacerItem(20, 18, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
-        self.verticalLayout.addItem(self.verticalSpacer_4)
+        self.verticalLayout_2.addItem(self.verticalSpacer_4)
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
@@ -103,7 +139,7 @@ class Ui_Auth(object):
         self.lblAuthCode.setSizePolicy(sizePolicy)
         self.lblAuthCode.setMinimumSize(QSize(0, 51))
         self.lblAuthCode.setMaximumSize(QSize(16777215, 51))
-        self.lblAuthCode.setFont(font1)
+        self.lblAuthCode.setFont(font2)
 
         self.horizontalLayout_2.addWidget(self.lblAuthCode)
 
@@ -122,11 +158,11 @@ class Ui_Auth(object):
         self.horizontalLayout_2.addWidget(self.btnHelp)
 
 
-        self.verticalLayout.addLayout(self.horizontalLayout_2)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_2)
 
         self.verticalSpacer_5 = QSpacerItem(17, 18, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
-        self.verticalLayout.addItem(self.verticalSpacer_5)
+        self.verticalLayout_2.addItem(self.verticalSpacer_5)
 
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
@@ -134,7 +170,7 @@ class Ui_Auth(object):
         self.chkDebug.setObjectName(u"chkDebug")
         self.chkDebug.setMinimumSize(QSize(0, 51))
         self.chkDebug.setMaximumSize(QSize(16777215, 51))
-        self.chkDebug.setFont(font1)
+        self.chkDebug.setFont(font2)
 
         self.horizontalLayout_3.addWidget(self.chkDebug)
 
@@ -146,9 +182,9 @@ class Ui_Auth(object):
         self.btnOk.setObjectName(u"btnOk")
         self.btnOk.setMinimumSize(QSize(150, 51))
         self.btnOk.setMaximumSize(QSize(150, 51))
-        font2 = QFont()
-        font2.setBold(True)
-        self.btnOk.setFont(font2)
+        font3 = QFont()
+        font3.setBold(True)
+        self.btnOk.setFont(font3)
 
         self.horizontalLayout_3.addWidget(self.btnOk)
 
@@ -164,10 +200,7 @@ class Ui_Auth(object):
         self.horizontalLayout_3.addWidget(self.btnTryUse)
 
 
-        self.verticalLayout.addLayout(self.horizontalLayout_3)
-
-
-        self.verticalLayout_2.addLayout(self.verticalLayout)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_3)
 
         self.verticalSpacer_2 = QSpacerItem(20, 1, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -273,6 +306,8 @@ class Ui_Auth(object):
 "QCheckBox::indicator:checked:hover {\n"
 "    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #5fbdff, stop:1 #10f3ff);\n"
 "}", None))
+        self.lblMachineCode_2.setText(QCoreApplication.translate("Auth", u"\u83b7\u53d6\u652f\u6301", None))
+        self.lblCustomerService.setText("")
         self.label.setText(QCoreApplication.translate("Auth", u"\u6b22\u8fce\u4f7f\u7528\u5b57\u5e55\u751f\u6210\u5668", None))
         self.lblMachineCode.setText(QCoreApplication.translate("Auth", u"\u673a\u5668\u7801:", None))
         self.pushButton.setText(QCoreApplication.translate("Auth", u"\u70b9\u51fb\u590d\u5236", None))

@@ -249,7 +249,7 @@ class Transcriber(QObject):
 
             # 设置音频时长并发送信号
             self.audio_duration = audio_duration
-            logger_manager.info(f"📡 发送进度信号", "transcriber", show_in_ui=True)
+            # logger_manager.info(f"📡 发送进度信号", "transcriber", show_in_ui=True)
             self.progress_signal.emit(0)
             self.audio_duration_signal.emit(self.audio_duration)
             self.transcription_started.emit()

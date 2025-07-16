@@ -29,6 +29,7 @@ class Ui_MainWindow(object):
         MainWindow.setMinimumSize(QSize(600, 400))
         MainWindow.setMaximumSize(QSize(800, 600))
         MainWindow.setMouseTracking(False)
+        MainWindow.setAcceptDrops(False)
         icon = QIcon()
         icon.addFile(u"../../../../CsharpProject/20250218_com.wxy.toutiao/Resources/favicon.ico", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         MainWindow.setWindowIcon(icon)
@@ -50,6 +51,7 @@ class Ui_MainWindow(object):
         self.textEdit.setSizePolicy(sizePolicy)
         self.textEdit.setMinimumSize(QSize(381, 31))
         self.textEdit.setMaximumSize(QSize(16777215, 31))
+        self.textEdit.setAcceptDrops(True)
         self.textEdit.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.textEdit.setLineWrapMode(QTextEdit.NoWrap)
 

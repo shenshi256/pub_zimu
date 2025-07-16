@@ -7,21 +7,12 @@
 # @PROJECT_NAME: whisper_gui
 # @PRODUCT_NAME: PyCharm
 # -------------------------------------------------------------------------------
-
-# !/usr/bin/env python
-# -*- coding: utf-8 -*-
-# -------------------------------------------------------------------------------
-# @Time    : 2025/6/26 9:53
-# @Author  : WXY
-# @File    : auth_window.py
-# @PROJECT_NAME: whisper_gui
-# @PRODUCT_NAME: PyCharm
-# -------------------------------------------------------------------------------
 import hashlib
 import platform
 import subprocess
 from PySide6.QtWidgets import QMainWindow, QApplication, QMessageBox
 from PySide6.QtCore import Signal
+from PySide6.QtGui import QPixmap  # 添加这行导入
 from AESEncrypt import aes_decrypt, aes_encrypt
 from ui_auth import Ui_Auth
 from settings_manager import settings_manager
@@ -29,7 +20,7 @@ from datetime import datetime
 from LoggerManager import logger_manager
 from HelpDialog import HelpDialog
 from disclaimers import DisclaimersHelpDialog
-from utils import show_info, show_warning, show_error, setup_window_icon, VERSION, UNKNOWNMOTHERBOARD, UNKNOWNCPU
+from utils import show_info, show_warning, show_error, setup_window_icon, VERSION, UNKNOWNMOTHERBOARD, UNKNOWNCPU, CUSTOMERSERVICE, setup_label_icon
 
 
 class AuthWindow(QMainWindow):
@@ -48,6 +39,9 @@ class AuthWindow(QMainWindow):
         setup_window_icon(self)
         # 添加版本号到标题
         self.setWindowTitle(f"字幕生成器 {VERSION}")
+
+        # 设置客服微信图片
+        setup_label_icon(self.ui.lblCustomerService, CUSTOMERSERVICE)
         #
         self.ui.btnHelp.clicked.connect(self.open_disclaimers_dialog)
         # 初始化帮助窗口为None
@@ -92,59 +86,24 @@ class AuthWindow(QMainWindow):
 
     def check_trial_limit(self):
         """检查试用次数限制（每天3次）"""
-        try:
-            settings = settings_manager.settings
-            today = datetime.now().strftime('%Y-%m-%d')
-
-            # 获取今日试用次数
-            trial_date = settings.value("trial/last_trial_date", "")
-            trial_count = settings.value("trial/trial_count", 0, type=int)
-
-            # 如果是新的一天，重置试用次数
-            if trial_date != today:
-                trial_count = 0
-                settings.setValue("trial/last_trial_date", today)
-                settings.setValue("trial/trial_count", 0)
-                settings.sync()
-
-            # 检查是否超过限制
-            if trial_count >= 3:
-                show_warning(self, "试用限制",
-                             "今日试用次数已用完（每天限制3次）\n\n" +
-                             "如需继续使用，请联系客服获取授权码")
-                return False
-
-            return True
-
-        except Exception as e:
-            logger_manager.error(f"检查试用次数失败: {e}", "auth_window")
-            return False
+        can_use, error_msg = self.check_trial_limit_static()
+        if not can_use:
+            show_warning(self, "试用限制", error_msg)
+        return can_use
 
     def record_trial_usage(self):
         """记录试用次数"""
-        try:
-            settings = settings_manager.settings
-            trial_count = settings.value("trial/trial_count", 0, type=int)
-            trial_count += 1
+        trial_count, remaining = self.record_trial_usage_static()
 
-            settings.setValue("trial/trial_count", trial_count)
-            settings.sync()
-
-            remaining = 3 - trial_count
+        if trial_count is not None:
             if remaining > 0:
                 show_info(self, "试用模式",
-                          f"进入试用模式成功！\n\n" +
                           f"今日剩余试用次数：{remaining}次\n" +
                           f"试用模式限制：音视频时长不超过10分钟")
             else:
                 show_info(self, "试用模式",
-                          f"进入试用模式成功！\n\n" +
                           f"这是今日最后一次试用机会\n" +
                           f"试用模式限制：音视频时长不超过10分钟")
-
-        except Exception as e:
-            logger_manager.error(f"记录试用次数失败: {e}", "auth_window")
-
 
     def clear_auth_registry(self):
         """清空注册表中auth下的所有键值"""
@@ -510,5 +469,55 @@ class AuthWindow(QMainWindow):
         except Exception as e:
             logger_manager.error(f"打开使用帮助窗口时发生错误: {str(e)}", "auth_window")
             QMessageBox.warning(self, "错误", f"无法打开使用帮助窗口: {str(e)}")
+
+    @staticmethod
+    def check_trial_limit_static():
+        """检查试用次数限制（每天3次）- 静态方法"""
+        try:
+            settings = settings_manager.settings
+            today = datetime.now().strftime('%Y-%m-%d')
+
+            # 获取今日试用次数
+            trial_date = settings.value("trial/last_trial_date", "")
+            trial_count = settings.value("trial/trial_count", 0, type=int)
+
+            # 如果是新的一天，重置试用次数
+            if trial_date != today:
+                trial_count = 0
+                settings.setValue("trial/last_trial_date", today)
+                settings.setValue("trial/trial_count", 0)
+                settings.sync()
+
+            # 检查是否超过限制
+            if trial_count >= 3:
+                error_msg = ("今日试用次数已用完（每天限制3次）\n\n" +
+                             "如需继续使用，请联系客服获取授权码")
+                return False, error_msg
+
+            return True, ""
+
+        except Exception as e:
+            logger_manager.error(f"检查试用次数失败: {e}", "auth_window")
+            return False, f"检查试用次数失败: {e}"
+
+    @staticmethod
+    def record_trial_usage_static():
+        """记录试用次数 - 静态方法"""
+        try:
+            settings = settings_manager.settings
+            trial_count = settings.value("trial/trial_count", 0, type=int)
+            trial_count += 1
+
+            settings.setValue("trial/trial_count", trial_count)
+            settings.sync()
+
+            remaining = 3 - trial_count
+
+            # 返回使用次数和剩余次数，让调用方决定如何显示
+            return trial_count, remaining
+
+        except Exception as e:
+            logger_manager.error(f"记录试用次数失败: {e}", "auth_window")
+            return None, None
 
 

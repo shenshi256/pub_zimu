@@ -125,8 +125,8 @@ class DisclaimersHelpDialog(QMainWindow):
                    👉 <a href="https://github.com/openai/whisper" class="link">https://github.com/openai/whisper</a></p>
 
                    <p><strong>🇨🇳 网盘下载（推荐）：</strong></p>
-                   <ul>  通过网盘分享的文件：字幕生成器模型
-链接: 
+                   <ul>  
+                   <!-- 通过网盘分享的文件：字幕生成器模型链接: -->
                        <li>📦 百度网盘：<a href="https://pan.baidu.com/s/1mNNWBpeq8Lk19-q3JPqrmA?pwd=b6xx"  class="link" >https://pan.baidu.com/s/1mNNWBpeq8Lk19-q3JPqrmA?pwd=b6xx</a> <span  class="link">提取码: b6xx</span></li>
                        <li>👉 如嫌网盘限速, 可以联系客服, 发邮箱超大附件 </li>
                       <!-- <li>📦 夸克网盘：https://pan.kuake.com/addfgdsa 提取码：Z22C</li> -->

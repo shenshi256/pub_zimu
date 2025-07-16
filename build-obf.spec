@@ -13,7 +13,7 @@ a = Analysis(
     ],
     datas=[
         ('favicon.ico', '.'),
-        ('customer_service.jpg', '.'),
+        ('customer_service.png', '.'),
         # ✅ 添加 PyArmor 数据文件
         ('dist_obfuscated/pytransform', 'pytransform'),
          # 添加 Whisper 资源文件

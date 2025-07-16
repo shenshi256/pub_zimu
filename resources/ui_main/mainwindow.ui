@@ -28,6 +28,9 @@
   <property name="mouseTracking">
    <bool>false</bool>
   </property>
+  <property name="acceptDrops">
+   <bool>false</bool>
+  </property>
   <property name="windowIcon">
    <iconset>
     <normaloff>../../../../CsharpProject/20250218_com.wxy.toutiao/Resources/favicon.ico</normaloff>../../../../CsharpProject/20250218_com.wxy.toutiao/Resources/favicon.ico</iconset>
@@ -204,6 +207,9 @@ QProgressBar::chunk {
           <width>16777215</width>
           <height>31</height>
          </size>
+        </property>
+        <property name="acceptDrops">
+         <bool>true</bool>
         </property>
         <property name="toolTip">
          <string>请选择音视频文件</string>

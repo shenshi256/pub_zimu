@@ -32,7 +32,10 @@ public:
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout_2;
     QSpacerItem *verticalSpacer;
+    QHBoxLayout *horizontalLayout_4;
     QVBoxLayout *verticalLayout;
+    QLabel *lblMachineCode_2;
+    QLabel *lblCustomerService;
     QLabel *label;
     QSpacerItem *verticalSpacer_3;
     QHBoxLayout *horizontalLayout;
@@ -71,40 +74,76 @@ public:
 
         verticalLayout_2->addItem(verticalSpacer);
 
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
         verticalLayout = new QVBoxLayout();
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        lblMachineCode_2 = new QLabel(centralwidget);
+        lblMachineCode_2->setObjectName(QStringLiteral("lblMachineCode_2"));
+        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(lblMachineCode_2->sizePolicy().hasHeightForWidth());
+        lblMachineCode_2->setSizePolicy(sizePolicy);
+        lblMachineCode_2->setMinimumSize(QSize(120, 30));
+        lblMachineCode_2->setMaximumSize(QSize(120, 30));
+        QFont font;
+        font.setFamily(QStringLiteral("Arial"));
+        font.setPointSize(12);
+        lblMachineCode_2->setFont(font);
+        lblMachineCode_2->setAlignment(Qt::AlignCenter);
+
+        verticalLayout->addWidget(lblMachineCode_2);
+
+        lblCustomerService = new QLabel(centralwidget);
+        lblCustomerService->setObjectName(QStringLiteral("lblCustomerService"));
+        lblCustomerService->setMinimumSize(QSize(120, 120));
+        lblCustomerService->setMaximumSize(QSize(120, 120));
+        lblCustomerService->setPixmap(QPixmap(QString::fromUtf8("../../customer_service.png")));
+        lblCustomerService->setScaledContents(true);
+
+        verticalLayout->addWidget(lblCustomerService);
+
+
+        horizontalLayout_4->addLayout(verticalLayout);
+
         label = new QLabel(centralwidget);
         label->setObjectName(QStringLiteral("label"));
-        QFont font;
-        font.setFamily(QStringLiteral("Arial Black"));
-        font.setPointSize(24);
-        font.setBold(true);
-        font.setWeight(75);
-        label->setFont(font);
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
+        label->setSizePolicy(sizePolicy1);
+        QFont font1;
+        font1.setFamily(QStringLiteral("Arial Black"));
+        font1.setPointSize(24);
+        font1.setBold(true);
+        font1.setWeight(75);
+        label->setFont(font1);
         label->setTextFormat(Qt::AutoText);
         label->setAlignment(Qt::AlignCenter);
 
-        verticalLayout->addWidget(label);
+        horizontalLayout_4->addWidget(label);
+
+
+        verticalLayout_2->addLayout(horizontalLayout_4);
 
         verticalSpacer_3 = new QSpacerItem(20, 18, QSizePolicy::Minimum, QSizePolicy::Fixed);
 
-        verticalLayout->addItem(verticalSpacer_3);
+        verticalLayout_2->addItem(verticalSpacer_3);
 
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         lblMachineCode = new QLabel(centralwidget);
         lblMachineCode->setObjectName(QStringLiteral("lblMachineCode"));
-        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(lblMachineCode->sizePolicy().hasHeightForWidth());
         lblMachineCode->setSizePolicy(sizePolicy);
         lblMachineCode->setMinimumSize(QSize(0, 51));
         lblMachineCode->setMaximumSize(QSize(16777215, 51));
-        QFont font1;
-        font1.setFamily(QStringLiteral("Arial"));
-        font1.setPointSize(16);
-        lblMachineCode->setFont(font1);
+        QFont font2;
+        font2.setFamily(QStringLiteral("Arial"));
+        font2.setPointSize(16);
+        lblMachineCode->setFont(font2);
 
         horizontalLayout->addWidget(lblMachineCode);
 
@@ -124,11 +163,11 @@ public:
         horizontalLayout->addWidget(pushButton);
 
 
-        verticalLayout->addLayout(horizontalLayout);
+        verticalLayout_2->addLayout(horizontalLayout);
 
         verticalSpacer_4 = new QSpacerItem(20, 18, QSizePolicy::Minimum, QSizePolicy::Fixed);
 
-        verticalLayout->addItem(verticalSpacer_4);
+        verticalLayout_2->addItem(verticalSpacer_4);
 
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
@@ -138,7 +177,7 @@ public:
         lblAuthCode->setSizePolicy(sizePolicy);
         lblAuthCode->setMinimumSize(QSize(0, 51));
         lblAuthCode->setMaximumSize(QSize(16777215, 51));
-        lblAuthCode->setFont(font1);
+        lblAuthCode->setFont(font2);
 
         horizontalLayout_2->addWidget(lblAuthCode);
 
@@ -157,11 +196,11 @@ public:
         horizontalLayout_2->addWidget(btnHelp);
 
 
-        verticalLayout->addLayout(horizontalLayout_2);
+        verticalLayout_2->addLayout(horizontalLayout_2);
 
         verticalSpacer_5 = new QSpacerItem(17, 18, QSizePolicy::Minimum, QSizePolicy::Fixed);
 
-        verticalLayout->addItem(verticalSpacer_5);
+        verticalLayout_2->addItem(verticalSpacer_5);
 
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
@@ -169,7 +208,7 @@ public:
         chkDebug->setObjectName(QStringLiteral("chkDebug"));
         chkDebug->setMinimumSize(QSize(0, 51));
         chkDebug->setMaximumSize(QSize(16777215, 51));
-        chkDebug->setFont(font1);
+        chkDebug->setFont(font2);
 
         horizontalLayout_3->addWidget(chkDebug);
 
@@ -181,10 +220,10 @@ public:
         btnOk->setObjectName(QStringLiteral("btnOk"));
         btnOk->setMinimumSize(QSize(150, 51));
         btnOk->setMaximumSize(QSize(150, 51));
-        QFont font2;
-        font2.setBold(true);
-        font2.setWeight(75);
-        btnOk->setFont(font2);
+        QFont font3;
+        font3.setBold(true);
+        font3.setWeight(75);
+        btnOk->setFont(font3);
 
         horizontalLayout_3->addWidget(btnOk);
 
@@ -200,10 +239,7 @@ public:
         horizontalLayout_3->addWidget(btnTryUse);
 
 
-        verticalLayout->addLayout(horizontalLayout_3);
-
-
-        verticalLayout_2->addLayout(verticalLayout);
+        verticalLayout_2->addLayout(horizontalLayout_3);
 
         verticalSpacer_2 = new QSpacerItem(20, 1, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
@@ -310,6 +346,8 @@ public:
 "QCheckBox::indicator:checked:hover {\n"
 "    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #5fbdff, stop:1 #10f3ff);\n"
 "}", 0));
+        lblMachineCode_2->setText(QApplication::translate("Auth", "\350\216\267\345\217\226\346\212\200\346\234\257\346\224\257\346\214\201", 0));
+        lblCustomerService->setText(QString());
         label->setText(QApplication::translate("Auth", "\346\254\242\350\277\216\344\275\277\347\224\250\345\255\227\345\271\225\347\224\237\346\210\220\345\231\250", 0));
         lblMachineCode->setText(QApplication::translate("Auth", "\346\234\272\345\231\250\347\240\201:", 0));
         pushButton->setText(QApplication::translate("Auth", "\347\202\271\345\207\273\345\244\215\345\210\266", 0));

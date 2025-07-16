@@ -23,20 +23,20 @@ UNKNOWNMOTHERBOARD = "UNKNOWN_MOTHERBOARD"
 # 客服微信图片 , 不能使用base64的图片, 打包工具对长字符串兼容不好, 虽然在debug可以运行, 但是一打包就挂了
 # CUSTOMERSERVICE = """data:image/jpeg;base64,iVBORw0KGgoAAAA...ElFTkSuQmCC"""
 # 客服微信图片结束
-CUSTOMERSERVICE = "customer_service.jpg"
+CUSTOMERSERVICE = "customer_service.png"
 
 # 垂直滚动条样式
 SCROLLBARSTYLE = """
         QScrollBar:vertical {
             background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 255, 255, 30), stop:1 rgba(255, 255, 255, 50));
             width: 12px;
-            border-radius: 6px;
+            border-radius: 5px;
             margin: 0px;
         }
         
         QScrollBar::handle:vertical {
             background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #667eea, stop:1 #764ba2);
-            border-radius: 6px;
+            border-radius: 5px;
             min-height: 30px;
             margin: 2px;
         }
@@ -64,7 +64,6 @@ SCROLLBARSTYLE = """
         }
         """
 
-
 def setup_window_icon(window, icon_path="favicon.ico"):
     """为窗口设置图标"""
     icon = QIcon()
@@ -73,16 +72,16 @@ def setup_window_icon(window, icon_path="favicon.ico"):
         icon.addFile(icon_full_path, QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         window.setWindowIcon(icon)
     else:
-        print(f"Warning: Icon file not found: {icon_full_path}")
-
-
+        logger_manager.warning(f"Warning: Icon file not found: {icon_full_path}")
+        #print(f"Warning: Icon file not found: {icon_full_path}")
 
 
 def get_bundled_resource_path(resource_name):
     """获取打包资源的路径（兼容开发和打包环境）"""
     if getattr(sys, 'frozen', False):
         # 打包后的exe环境
-        base_path = sys._MEIPASS
+        # base_path = sys._MEIPASS
+        base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
     else:
         # 开发环境
         base_path = os.path.dirname(os.path.abspath(__file__))
@@ -126,7 +125,7 @@ def show_message_with_icon(parent, icon_type, title, message, icon_path="favicon
     msg_box.setStyleSheet("""
         QMessageBox {
             background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #667eea, stop:1 #764ba2);
-            border-radius: 8px;
+            border-radius: 5px;
             color: white;
         }
         QMessageBox QLabel {
@@ -136,16 +135,16 @@ def show_message_with_icon(parent, icon_type, title, message, icon_path="favicon
         }
         QMessageBox QPushButton {
             background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 80), stop:1 rgba(255, 255, 255, 60));
-            border: 2px solid rgba(255, 255, 255, 100);
-            border-radius: 6px;
-            color: #333;
+            border: 1px solid rgba(255, 255, 255, 100);
+            border-radius: 5px;
+            color: white;
             font-weight: bold;
             padding: 8px 16px;
             min-width: 80px;
         }
         QMessageBox QPushButton:hover {
             background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 100), stop:1 rgba(255, 255, 255, 80));
-            border: 2px solid rgba(255, 255, 255, 150);
+            border: 1px solid rgba(255, 255, 255, 150);
         }
         QMessageBox QPushButton:pressed {
             background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 60), stop:1 rgba(255, 255, 255, 40));

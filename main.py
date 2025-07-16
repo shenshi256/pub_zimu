@@ -41,8 +41,6 @@ def ensure_model_directory():
             print(f"创建model目录失败: {e}")
     return model_dir
 
-
-
 class MainWindow(QMainWindow):
     def __init__(self, trial_mode=False):
         super().__init__()
@@ -50,6 +48,8 @@ class MainWindow(QMainWindow):
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        # 设置拖放事件处理
+        self.setup_drag_drop_events()
         setup_window_icon(self)
         # ✅ 使用全局设置管理器
         self.settings = settings_manager.settings
@@ -476,6 +476,14 @@ class MainWindow(QMainWindow):
 
         # 试用模式下检查文件时长
         if self.trial_mode:
+
+            # 1. 检查试用次数限制
+            can_use, error_msg = AuthWindow.check_trial_limit_static()
+            if not can_use:
+                show_warning(self, "试用限制", error_msg)
+                return
+
+            # 2. 检查文件时长限制
             duration_seconds = self.check_media_duration(file_path)
             if duration_seconds is None:
                 show_warning(self, "错误", "无法获取文件时长，请确保文件格式正确")
@@ -490,6 +498,12 @@ class MainWindow(QMainWindow):
                              f"当前文件时长: 【{duration_minutes:.1f}】分钟\n\n"
                              f"如需处理更长的文件，请购买授权码")
                 return
+
+            # 3. 记录本次试用使用
+            trial_count, remaining = AuthWindow.record_trial_usage_static()
+            if trial_count is not None:
+                logger_manager.info(f"试用次数记录：已使用 {trial_count}/3 次，剩余 {remaining} 次", "main")
+
         # ✅ 检查调试模式并初始化日志文件
         self.setup_debug_logging()
         full_model_path = os.path.join(self.model_dir, model_file)
@@ -587,7 +601,6 @@ class MainWindow(QMainWindow):
             if self.worker_thread and self.worker_thread.isRunning():
                 self.worker_thread.quit()
                 self.worker_thread.wait()
-
 
     def cleanup_worker_thread(self):
         """强制清理工作线程"""
@@ -769,7 +782,7 @@ class MainWindow(QMainWindow):
             if progress_value % 10 == 0:
                 message = f"🔄 转录进度: {progress_value}%"
                 #self.write_debug_log(message)
-                logger_manager.info(message, "main")
+                logger_manager.info(message, "main", show_in_ui=True)
                
 
         elif self.sim_progress < 90:
@@ -794,19 +807,75 @@ class MainWindow(QMainWindow):
         self.working_timer.stop()
         # print("[DEBUG] All timers stopped")
 
+    def setup_drag_drop_events(self):
+        """设置拖放事件处理"""
+        # 支持的音视频文件扩展名
+        self.supported_extensions = {
+            '.mp4', '.mov', '.mkv', '.avi', '.flv',  # 视频格式
+            '.wav', '.mp3', '.ogg', '.flac'  # 音频格式
+        }
+
+        # 重写拖放事件
+        self.ui.textEdit.dragEnterEvent = self.textEdit_dragEnterEvent
+        self.ui.textEdit.dragMoveEvent = self.textEdit_dragMoveEvent
+        self.ui.textEdit.dropEvent = self.textEdit_dropEvent
+
+    def textEdit_dragEnterEvent(self, event):
+        """textEdit拖拽进入事件"""
+        if event.mimeData().hasUrls():
+            urls = event.mimeData().urls()
+            if len(urls) == 1:  # 只允许拖拽一个文件
+                file_path = urls[0].toLocalFile()
+                if self.is_supported_file(file_path):
+                    event.acceptProposedAction()
+                    return
+        event.ignore()
+
+    def textEdit_dragMoveEvent(self, event):
+        """textEdit拖拽移动事件"""
+        if event.mimeData().hasUrls():
+            urls = event.mimeData().urls()
+            if len(urls) == 1:
+                file_path = urls[0].toLocalFile()
+                if self.is_supported_file(file_path):
+                    event.acceptProposedAction()
+                    return
+        event.ignore()
+
+    def textEdit_dropEvent(self, event):
+        """textEdit拖拽放下事件"""
+        if event.mimeData().hasUrls():
+            urls = event.mimeData().urls()
+            if len(urls) == 1:
+                file_path = urls[0].toLocalFile()
+                if self.is_supported_file(file_path) and os.path.exists(file_path):
+                    self.ui.textEdit.setText(file_path)
+                    self.ui.textEdit.moveCursor(QTextCursor.MoveOperation.End)
+
+                    # 保存目录设置
+                    self.settings.setValue("last_directory", os.path.dirname(file_path))
+                    # 更新提示
+                    self.update_textEdit_tip()
+                    # 记录日志
+                    logger_manager.info(f"通过拖放选择文件: {file_path}", "main")
+
+                    event.acceptProposedAction()
+                    return
+        event.ignore()
+
+    def is_supported_file(self, file_path):
+        """检查文件是否为支持的音视频格式"""
+        if not file_path:
+            return False
+        file_ext = os.path.splitext(file_path)[1].lower()
+        return file_ext in self.supported_extensions
+
+
 def show_auth_window():
     """显示授权窗口"""
     auth_window = AuthWindow() # AuthWindow
     auth_window.show()
     return auth_window
-
-# def show_main_window():
-#     """显示主窗口"""
-#     main_window = MainWindow()
-#     # main_window.setWindowTitle("字幕生成器")
-#     main_window.setWindowTitle(f"字幕生成器 {VERSION}")
-#     main_window.show()
-#     return main_window
 
 def show_main_window(trial_mode=False):
     """显示主窗口"""
