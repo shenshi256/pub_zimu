@@ -4,3 +4,14 @@ build-obf/
 dist/
 model/
 dist_obfuscated/
+customer_service.png
+customer_service2.png
+帮助文档/
+resources/
+build.bat
+build-obf.spec
+build.spec
+build-obf.bat
+obfuscated.py
+README.TD
+startup.bat
