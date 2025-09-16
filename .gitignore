@@ -15,3 +15,5 @@ build-obf.bat
 obfuscated.py
 README.TD
 startup.bat
+.idea
+.gitignore
