@@ -12,7 +12,7 @@ import sys
 from PySide6.QtWidgets import QMainWindow, QApplication
 from PySide6.QtCore import QTimer, QThread, Signal, Qt
 from ui_splashscreen import Ui_SplashScreen
-from utils import   setup_label_icon, VERSION
+from utils import setup_label_icon, VERSION
 from auth_window import AuthWindow
 from settings_manager import settings_manager
 from AESEncrypt import aes_decrypt
@@ -50,7 +50,7 @@ class SplashScreen(QMainWindow):
         self.ui.setupUi(self)
 
         # 设置窗口属性以支持圆角和透明背景
-        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint | Qt.Tool)
+        self.setWindowFlags(self.windowFlags() | Qt.WindowType. FramelessWindowHint | Qt.WindowType.Tool)
         #self.setAttribute(Qt.WA_TranslucentBackground)
 
         # 初始化UI
@@ -76,8 +76,8 @@ class SplashScreen(QMainWindow):
 
     def show_main_window(self, trial_mode=False):
         """显示主窗口"""
-        from main import show_main_window
-        self.main_window = show_main_window(trial_mode=trial_mode)
+        import main
+        self.main_window = main.show_main_window(trial_mode=trial_mode)
 
     def init_ui(self):
         """初始化UI界面"""
@@ -90,7 +90,7 @@ class SplashScreen(QMainWindow):
         # 连接关闭按钮事件
         # self.ui.closeButton.clicked.connect(self.close_application)
         # 为QLabel添加鼠标点击事件（替换原来的clicked.connect）
-        self.ui.closeButton.mousePressEvent = lambda  event: self.close_application() if event.button() == Qt.LeftButton else None
+        self.ui.closeButton.mousePressEvent = lambda  event: self.close_application() if event.button() == Qt.MouseButton.LeftButton else None
         # 初始化进度条
         self.ui.progressBar.setValue(0)
 
@@ -212,13 +212,14 @@ class SplashScreen(QMainWindow):
 
     def is_auth_valid(self):
         """检查授权是否有效"""
+
         try:
             machine_code, auth_time, last_auth_code = settings_manager.get_auth_info()
 
             if not machine_code or not auth_time or not last_auth_code:
                 return False
 
-            # 重复授权验证逻辑（简化版）
+            # 重复授权验证逻辑
             auth_code_one_de = aes_decrypt(last_auth_code)
             if not auth_code_one_de:
                 return False
@@ -311,24 +312,3 @@ if __name__ == "__main__":
         print(f"错误详情: {e}")
         print(f"堆栈跟踪: {traceback.format_exc()}")
         input("按回车键退出...")  # 防止窗口立即关闭
-
-    # # 确保必要的初始化
-    # import os
-    #
-    # # 确保工作目录正确
-    # if not os.path.exists('model'):
-    #     os.makedirs('model', exist_ok=True)
-    #
-    # app = QApplication(sys.argv)
-    #
-    # # 设置应用程序属性
-    # app.setApplicationName("字幕生成器")
-    # app.setApplicationVersion("1.0")
-    #
-    # try:
-    #     splash = SplashScreen()
-    #     splash.show()
-    #     sys.exit(app.exec())
-    # except Exception as e:
-    #     print(f"启动失败: {e}")
-    #     sys.exit(1)

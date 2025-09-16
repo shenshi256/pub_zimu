@@ -12,7 +12,7 @@ import sys
 import os
 import socket
 import tempfile
-from PySide6.QtCore import QObject, Signal
+from PySide6.QtCore import QObject, Signal, Qt
 from PySide6.QtNetwork import QLocalServer, QLocalSocket
 from PySide6.QtWidgets import QApplication
 
@@ -26,7 +26,25 @@ class SingleInstanceManager(QObject):
         self.app_name = app_name
         self.server = None
         self.socket = None
+        self.main_window_instance = None  # ✅ 添加主窗口实例引用
 
+    def set_main_window(self, main_window):
+        """设置主窗口实例"""
+        self.main_window_instance = main_window
+
+    def activate_main_window(self):
+        """激活主窗口"""
+        if self.main_window_instance is not None:
+            try:
+                self.main_window_instance.show()
+                self.main_window_instance.activateWindow()
+                self.main_window_instance.setWindowState(
+                    self.main_window_instance.windowState() & ~Qt.WindowState.WindowMinimized | Qt.WindowState.WindowActive)
+                self.main_window_instance.raise_()
+                return True
+            except Exception:
+                return False
+        return False
     def is_running(self):
         """检查应用程序是否已经在运行"""
         # 尝试连接到现有实例
@@ -63,14 +81,28 @@ class SingleInstanceManager(QObject):
         if client_socket:
             client_socket.readyRead.connect(lambda: self._handle_client_data(client_socket))
 
+    # def _handle_client_data(self, client_socket):
+    #     """处理客户端数据"""
+    #     data = client_socket.readAll().data()
+    #     if data == b"ACTIVATE":
+    #         # 发出显示窗口信号
+    #         self.show_window_signal.emit()
+
+    #     client_socket.disconnectFromHost()
+
     def _handle_client_data(self, client_socket):
         """处理客户端数据"""
-        data = client_socket.readAll().data()
-        if data == b"ACTIVATE":
-            # 发出显示窗口信号
-            self.show_window_signal.emit()
-
-        client_socket.disconnectFromHost()
+        try:
+            data = client_socket.readAll().data()
+            if data == b"ACTIVATE":
+                # 发出显示窗口信号
+                self.show_window_signal.emit()
+        except Exception as e:
+            print(f"处理客户端数据时出错: {e}")
+        finally:
+            # 确保连接被正确关闭
+            if client_socket.state() != QLocalSocket.UnconnectedState:
+                client_socket.disconnectFromServer()
 
     def cleanup(self):
         """清理资源"""

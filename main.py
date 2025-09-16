@@ -8,15 +8,16 @@
 # @PRODUCT_NAME: PyCharm
 # -------------------------------------------------------------------------------
 import os
-import random
 import sys
+import platform
+import random
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox
 from HelpDialog import HelpDialog
 from SystemMonitorWorker import SystemMonitorWorker
 from ui_main import Ui_MainWindow
 from transcriber import Transcriber
 from PySide6.QtCore import QThread,  QMetaObject, Qt, Q_ARG, QTimer ,QSettings
-from PySide6.QtGui import QTextCursor  # 添加这行导入
+from PySide6.QtGui import QTextCursor
 from auth_window import AuthWindow  # 授权窗口
 from settings_manager import settings_manager
 from AESEncrypt import aes_decrypt
@@ -29,6 +30,56 @@ from SplashScreen import SplashScreen
 # 导入全局异常处理器
 
 from GlobalExceptionHandler import GlobalExceptionHandler
+
+
+# ✅ 第一次启动后, 创建一个主窗口, 并保存大这个变量里面
+main_window_instance = None
+# ✅ 添加 instance_manager 全局变量声明
+instance_manager = None
+
+
+def activate_main_window():
+    """激活主窗口"""
+    # 移除这行：global instance_manager
+
+    # 第一层：通过SingleInstanceManager查找
+    if instance_manager and hasattr(instance_manager, 'main_window_instance') and instance_manager.main_window_instance:
+        try:
+            window = instance_manager.main_window_instance
+            if window.isVisible():
+                window.raise_()
+                window.activateWindow()
+                if window.isMinimized():
+                    window.showNormal()
+                return True
+        except Exception as e:
+            logger_manager.error(f"通过SingleInstanceManager激活窗口失败: {e}", "main")
+
+    # 第二层：通过全局变量查找
+    if main_window_instance:
+        try:
+            if main_window_instance.isVisible():
+                main_window_instance.raise_()
+                main_window_instance.activateWindow()
+                if main_window_instance.isMinimized():
+                    main_window_instance.showNormal()
+                return True
+        except Exception as e:
+            logger_manager.error(f"通过全局变量激活窗口失败: {e}", "main")
+
+    # 第三层：通过QApplication遍历查找
+    try:
+        for widget in QApplication.allWidgets():
+            if isinstance(widget, MainWindow) and widget.isVisible():
+                widget.raise_()
+                widget.activateWindow()
+                if widget.isMinimized():
+                    widget.showNormal()
+                return True
+    except Exception as e:
+        logger_manager.error(f"通过QApplication遍历激活窗口失败: {e}", "main")
+
+    return False
 
 def ensure_model_directory():
     """确保model目录存在"""
@@ -53,7 +104,8 @@ class MainWindow(QMainWindow):
         setup_window_icon(self)
         # ✅ 使用全局设置管理器
         self.settings = settings_manager.settings
-
+        self.setMaximumSize(800,600)
+        self.setMinimumSize(800,600)
         # ✅ 确保model目录存在
         self.model_dir = ensure_model_directory()
 
@@ -65,12 +117,16 @@ class MainWindow(QMainWindow):
 
         self.worker_thread = None
         self.transcriber = None
+
+
         self.ui.progressBar.setValue(0)
         self.ui.memoryRate.setText("")
         # # ✅ 添加系统监控定时器
         # self.system_monitor_timer = QTimer()
         # self.system_monitor_timer.timeout.connect(self.update_system_monitor)
         # self.system_monitor_timer.start(5000)  # 每5秒更新一次
+
+
 
         # 创建系统监控工作线程
         self.monitor_worker = SystemMonitorWorker()
@@ -88,6 +144,7 @@ class MainWindow(QMainWindow):
         # ✅ 添加进度模拟定时器
         self.progress_timer = QTimer()
         self.progress_timer.timeout.connect(self.update_progress)
+
         self.sim_progress = 0
         # ✅ 添加音频时长变量
         self.audio_duration = 0
@@ -98,8 +155,6 @@ class MainWindow(QMainWindow):
 
         # ✅ 监听 textEdit 文本变化
         self.ui.textEdit.textChanged.connect(self.update_textEdit_tip)
-
-
 
         # ✅ 动态加载模型文件名
         self.model_dir = os.path.join(os.getcwd(), "model")
@@ -133,7 +188,7 @@ class MainWindow(QMainWindow):
 
         # ✅ 设置UI文本框引用
         logger_manager.set_ui_text_edit(self.ui.textEdit_2)
-        logger_manager.info("主窗口初始化完成", "main")
+        logger_manager.info("✅ 主窗口初始化完成", "main")
 
         # 连接日志管理器的UI更新信号
         logger_manager.ui_update_signal.connect(self.update_ui_log)
@@ -296,30 +351,6 @@ class MainWindow(QMainWindow):
             # 文本不为空时显示完整路径
             self.ui.textEdit.setToolTip(current_text)
     def load_model_list(self):
-        # self.ui.comboBox.clear()
-        # # 确保model目录存在
-        # if not os.path.exists(self.model_dir):
-        #     os.makedirs(self.model_dir)
-        #
-        # try:
-        #     model_files = [f for f in os.listdir(self.model_dir) if f.endswith(".pt")]
-        # except Exception as e:
-        #     logger_manager.error(f"读取model目录失败: {str(e)}", "main")
-        #     model_files = []
-        #
-        # if not model_files:
-        #     self.ui.comboBox.addItem("请先下载模型文件到model目录")
-        #     # QMessageBox.information(self, "提示",
-        #     #                         f"未在 model 目录下发现任何模型文件。\n\n请下载Whisper模型文件(.pt格式)并放置到：\n{self.model_dir}")
-        #     show_info(self, "提示", f"未在 model 目录下发现任何模型文件。\n\n请下载Whisper模型文件(.pt格式)并放置到：\n{self.model_dir}")
-        #     return
-        #
-        # self.ui.comboBox.addItem("请选择模型")
-        # for model in model_files:
-        #     self.ui.comboBox.addItem(model)
-        #
-        # self.ui.comboBox.setCurrentIndex(1)  # 默认选第一个模型
-
         self.ui.comboBox.clear()
 
         # 确保model目录存在
@@ -877,8 +908,20 @@ def show_auth_window():
     auth_window.show()
     return auth_window
 
+# def show_main_window(trial_mode=False):
+#     """显示主窗口"""
+#     main_window = MainWindow(trial_mode=trial_mode)
+#
+#     if trial_mode:
+#         main_window.setWindowTitle(f"字幕生成器 (试用) {VERSION}")
+#     else:
+#         main_window.setWindowTitle(f"字幕生成器 {VERSION}")
+#
+#     main_window.show()
+#     return main_window
 def show_main_window(trial_mode=False):
     """显示主窗口"""
+    global main_window_instance, instance_manager
     main_window = MainWindow(trial_mode=trial_mode)
 
     if trial_mode:
@@ -887,14 +930,15 @@ def show_main_window(trial_mode=False):
         main_window.setWindowTitle(f"字幕生成器 {VERSION}")
 
     main_window.show()
+
+    # 保存全局引用
+    main_window_instance = main_window
+
+    # 设置到SingleInstanceManager中
+    if instance_manager:
+        instance_manager.set_main_window(main_window)
+
     return main_window
-
-
-# 在 MainWindow 类中添加测试方法
-def test_exception_handler(self):
-    """测试全局异常处理器"""
-    raise Exception("这是一个测试异常，用于验证全局异常处理器是否正常工作")
-
 
 if __name__ == "__main__":
     # 注册全局异常处理器
@@ -917,21 +961,29 @@ if __name__ == "__main__":
         if translator.load(locale, "qt", "_", qt_translations_path):
             app.installTranslator(translator)
 
+    # 添加这行：声明全局变量
+    # global instance_manager
+
     # 创建单实例管理器
     instance_manager = SingleInstanceManager("字幕生成器")
 
     # 检查是否已有实例在运行
     if instance_manager.is_running():
-        logger_manager.info("应用程序已运行", "main")
+        logger_manager.info("应用程序已运行，发送激活信号", "main")
         sys.exit(0)
+
+    logger_manager.info("应用程序开始启动", "main")
 
     # 启动单实例服务器
     if not instance_manager.start_server():
         logger_manager.error("无法启动单实例服务", "main")
         sys.exit(1)
 
+    # 连接信号
+    instance_manager.show_window_signal.connect(activate_main_window)
+
     try:
-        # 启动SplashScreen（替换原有的授权检查逻辑）
+        # 启动SplashScreen
         splash = SplashScreen()
         splash.show()
 
@@ -939,9 +991,7 @@ if __name__ == "__main__":
         sys.exit(app.exec())
     except Exception as e:
         import traceback
-
         logger_manager.error(f"应用程序启动失败: {e}", "main")
         logger_manager.error(f"堆栈跟踪: {traceback.format_exc()}", "main")
         sys.exit(1)
-
 

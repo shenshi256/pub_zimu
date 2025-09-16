@@ -9,7 +9,6 @@
 # -------------------------------------------------------------------------------
 from PySide6.QtCore import QSettings
 
-
 class SettingsManager:
     _instance = None
     _settings = None

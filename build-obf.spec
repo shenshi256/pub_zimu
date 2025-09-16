@@ -135,7 +135,7 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=False,  # 隐藏控制台窗口
+    console=False,  # 隐藏控制台窗口, 如果需要调试print打印的时候, 可以改为False
     # onefile=True,  # 添加这一行, 没有多大用处
     disable_windowed_traceback=False,
     argv_emulation=False,
@@ -144,3 +144,16 @@ exe = EXE(
     entitlements_file=None,
     icon='favicon.ico'
 )
+
+
+# 构建完成后的操作
+import shutil
+import os
+
+# 复制启动器到dist目录
+try:
+    if os.path.exists('startup.bat'):
+        shutil.copy2('startup.bat', 'dist/启动器.bat')
+        print("✅ 启动器已复制到dist目录")
+except Exception as e:
+    print(f"❌ 复制启动器失败: {e}")

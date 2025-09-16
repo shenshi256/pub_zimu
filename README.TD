@@ -45,7 +45,7 @@ pyside6-uic .\helpshow.ui -o  ..\..\ui_helpshow.py
 # 5. 防止反编译
 5.1 混淆代码, 安装混淆工具
 
-pip install pyarmor==7.7.4  # 安装 PyArmor 7 作为 pyarmor-7, 不要安装8.0的版本
+(base) (20231201_pyGUI) PS D:\PythonProject\whisper_gui> pip install pyarmor==7.7.4  # 安装 PyArmor 7 作为 pyarmor-7, 不要安装8.0的版本
 (base) (20231201_pyGUI) PS D:\PythonProject\whisper_gui> pyarmor obfuscate --recursive --output dist_obfuscated main.py  # 每次更新完代码之后, 在执行pyinstaller build-obf.spec之前都要先执行这一行
 pyarmor obfuscate --recursive --output dist_obfuscated transcriber.py
 pyarmor obfuscate --recursive --output dist_obfuscated settings_manager.py

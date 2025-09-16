@@ -43,11 +43,11 @@ class DisclaimersHelpDialog(QMainWindow):
             <div style="text-align: center; margin: 10px 0 0px 0;">
                 <h3 style="margin: 10px 0; color: #2c3e50;">
                     ✨═══════════════════════════════════════✨<br>
-                    🌟    添加微信获取支持    🌟<br>
+                    🌟    若有帮助, 请支持一杯咖啡    🌟<br>
                     ✨═══════════════════════════════════════✨
                 </h3>
                  <p style="margin: 0; padding: 0;">
-                <img src="{service_img}" alt="Service" width="200" height="200" style="margin: 5px 0; 
+                <img src="{service_img}" alt="Service" width="500" height="300" style="margin: 5px 0; 
                 border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                 </p>
             </div>
@@ -115,6 +115,7 @@ class DisclaimersHelpDialog(QMainWindow):
              
               <h1>✅ 本工具基于 OpenAI 开源模型 Whisper 封装</h1> <!-- ，遵循 MIT License。</h1> -->
               <h1>✅ 授权码一机一用，换机需重新购买或联系客服</h1> 
+              <h1>✅ 本项目适应于win10或以上系统</h1> 
                
                 <h2 >1️⃣ 模型文件下载</h2>
               <!--  <span style="display:block;font-size:20px;font-weight:bold;margin:0;padding:0;">1️⃣ 模型文件下载</span>-->
@@ -147,7 +148,7 @@ class DisclaimersHelpDialog(QMainWindow):
                <ul>
                    <li>双击运行 <strong>字幕生成器.exe</strong>（首次启动可能略慢，属正常现象）；</li>
                    <li>项目为 <strong>离线独立运行包</strong>，无需联网即可使用；</li>
-                   <li>支持 <strong>Windows 10</strong> 及以上版本。不支持其他操作系统</li>
+                   <li>支持 <strong>Windows 10</strong> 及以上版本。不支持苹果系统, </li>
                </ul>
 
                <h2>4️⃣ 功能说明</h2>
