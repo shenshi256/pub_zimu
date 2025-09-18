@@ -6,7 +6,6 @@ model/
 dist_obfuscated/
 customer_service.png
 customer_service2.png
-帮助文档/
 resources/
 build.bat
 build-obf.spec
@@ -17,3 +16,4 @@ README.TD
 startup.bat
 .idea
 .gitignore
+AESEncrypt.py

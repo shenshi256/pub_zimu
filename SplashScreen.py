@@ -121,6 +121,7 @@ class SplashScreen(QMainWindow):
         # 检查授权信息完整性
         if not machine_code or not auth_time or not last_auth_code:
             self.auth_ready = True  # 需要显示授权窗口
+            #self.auth_ready = False  # 开源永远不显示授权窗口
             self.check_ready_state()
             return
 
@@ -215,11 +216,11 @@ class SplashScreen(QMainWindow):
 
         try:
             machine_code, auth_time, last_auth_code = settings_manager.get_auth_info()
-
+            # return True  # 开源, 授权永久有效
             if not machine_code or not auth_time or not last_auth_code:
                 return False
 
-            # 重复授权验证逻辑
+            # 重复授权验证逻辑（简化版）
             auth_code_one_de = aes_decrypt(last_auth_code)
             if not auth_code_one_de:
                 return False

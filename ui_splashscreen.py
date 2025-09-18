@@ -26,6 +26,7 @@ class Ui_SplashScreen(object):
         SplashScreen.resize(600, 400)
         SplashScreen.setMinimumSize(QSize(600, 400))
         SplashScreen.setMaximumSize(QSize(800, 600))
+        # 再需要自定义背景、透明效果, 禁用窗口的自动背景填充
         SplashScreen.setAutoFillBackground(False)
         self.centralwidget = QWidget(SplashScreen)
         self.centralwidget.setObjectName(u"centralwidget")
