@@ -35,9 +35,9 @@
 
 SRT, TXT, VTT, JSON
 
-45⃣ 项目的开源地址:
-https://gitee.com/lovegitee/pub_zimu
-
+5️⃣ 项目的开源地址:
+gitee : https://gitee.com/lovegitee/pub_zimu
+github : https://github.com/shenshi256/pub_zimu
 
 🌐 可选项：
 
