@@ -24,7 +24,7 @@ UNKNOWNMOTHERBOARD = "UNKNOWN_MOTHERBOARD"
 # 客服微信图片 , 不能使用base64的图片, 打包工具对长字符串兼容不好, 虽然在debug可以运行, 但是一打包就挂了
 # CUSTOMERSERVICE = """data:image/jpeg;base64,iVBORw0KGgoAAAA...ElFTkSuQmCC"""
 # 客服微信图片结束
-CUSTOMERSERVICE = "customer_service.png"
+CUSTOMERSERVICE = "customer_service.jpg"
 
 # 垂直滚动条样式
 SCROLLBARSTYLE = """

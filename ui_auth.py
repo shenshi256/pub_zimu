@@ -62,7 +62,7 @@ class Ui_Auth(object):
         self.lblCustomerService.setObjectName(u"lblCustomerService")
         self.lblCustomerService.setMinimumSize(QSize(120, 120))
         self.lblCustomerService.setMaximumSize(QSize(120, 120))
-        self.lblCustomerService.setPixmap(QPixmap(u"../../customer_service.png"))
+        self.lblCustomerService.setPixmap(QPixmap(u"../../customer_service.jpg"))
         self.lblCustomerService.setScaledContents(True)
 
         self.verticalLayout.addWidget(self.lblCustomerService)

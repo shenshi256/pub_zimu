@@ -228,7 +228,7 @@ class HelpDialog(QMainWindow):
 <h3>❗️ GPU 加速说明</h3>
 <ul>
   <li>Whisper 使用 <b>PyTorch + CUDA</b> 实现 GPU 加速，仅支持 <b>NVIDIA 显卡</b>。</li>
-  <li>如您使用 <b>AMD 显卡</b>，需自行安装 <b>ROCm + Linux + 特定 PyTorch</b>，部署复杂，我劝您不要用。</li>
+  <li>如您使用 <b>AMD 显卡</b>，需自行安装 <b>ROCm + Linux + 特定 PyTorch</b>，部署复杂，需要一些技术能力。</li>
   <li>如果您是大型商业使用, 推荐使用 <b>Windows + NVIDIA 显卡 + CUDA Toolkit</b> 获得最佳加速体验。</li>
 </ul>
         </body>

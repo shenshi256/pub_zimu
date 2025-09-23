@@ -18,9 +18,7 @@ from ui_main import Ui_MainWindow
 from transcriber import Transcriber
 from PySide6.QtCore import QThread,  QMetaObject, Qt, Q_ARG, QTimer ,QSettings
 from PySide6.QtGui import QTextCursor
-from auth_window import AuthWindow  # 授权窗口
 from settings_manager import settings_manager
-from AESEncrypt import aes_decrypt
 from datetime import datetime, timedelta
 from LoggerManager import logger_manager
 from utils import show_info, show_warning, show_error, setup_window_icon, get_system_monitor_info, VERSION
@@ -505,35 +503,6 @@ class MainWindow(QMainWindow):
             show_warning(self, "提示", "请先下载模型文件到model目录")
             return
 
-        # 试用模式下检查文件时长
-        if self.trial_mode:
-
-            # 1. 检查试用次数限制
-            can_use, error_msg = AuthWindow.check_trial_limit_static()
-            if not can_use:
-                show_warning(self, "试用限制", error_msg)
-                return
-
-            # 2. 检查文件时长限制
-            duration_seconds = self.check_media_duration(file_path)
-            if duration_seconds is None:
-                show_warning(self, "错误", "无法获取文件时长，请确保文件格式正确")
-                return
-
-            # 将秒转换为分钟
-            duration_minutes = duration_seconds / 60
-
-            if duration_minutes > 10:
-                show_warning(self, "试用限制",
-                             f"试用模式下仅支持【10分钟】以内的音视频文件\n"
-                             f"当前文件时长: 【{duration_minutes:.1f}】分钟\n\n"
-                             f"如需处理更长的文件，请购买授权码")
-                return
-
-            # 3. 记录本次试用使用
-            trial_count, remaining = AuthWindow.record_trial_usage_static()
-            if trial_count is not None:
-                logger_manager.info(f"试用次数记录：已使用 {trial_count}/3 次，剩余 {remaining} 次", "main")
 
         # ✅ 检查调试模式并初始化日志文件
         self.setup_debug_logging()
@@ -667,7 +636,10 @@ class MainWindow(QMainWindow):
     def send_working_message(self):
         """在主线程中发送工作提示消息"""
         current_time = datetime.now().strftime("%Y年%m月%d日%H:%M:%S")
-        str_temp = f"🕐 {current_time}  正在努力转换中，请稍候..."
+        tmp_str = " 正在努力转换中，请稍候..."
+        if self.sim_progress >= 90:
+            tmp_str = f"并没有死机卡机, 还在努力转换, 请稍候...{random.randint(10000000, 99999999)}"
+        str_temp = f"🕐 {current_time}  {tmp_str}"
 
         # ✅ 使用新的UI消息方法
         logger_manager.ui_message(str_temp, also_log=True, log_level='info', module_name='main')
@@ -901,12 +873,6 @@ class MainWindow(QMainWindow):
         file_ext = os.path.splitext(file_path)[1].lower()
         return file_ext in self.supported_extensions
 
-
-def show_auth_window():
-    """显示授权窗口"""
-    auth_window = AuthWindow() # AuthWindow
-    auth_window.show()
-    return auth_window
 
 # def show_main_window(trial_mode=False):
 #     """显示主窗口"""

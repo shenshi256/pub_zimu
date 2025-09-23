@@ -113,8 +113,7 @@ class DisclaimersHelpDialog(QMainWindow):
            <body>
                <!-- <h1>📘 项目使用说明（字幕生成器）</h1> -->
              
-              <h1>✅ 本工具基于 OpenAI 开源模型 Whisper 封装</h1> <!-- ，遵循 MIT License。</h1> -->
-              <h1>✅ 授权码一机一用，换机需重新购买或联系客服</h1> 
+              <h1>✅ 本工具基于 OpenAI 开源模型 Whisper 封装</h1> <!-- ，遵循 MIT License。</h1> --> 
               <h1>✅ 本项目适应于win10或以上系统</h1> 
                
                 <h2 >1️⃣ 模型文件下载</h2>

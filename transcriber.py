@@ -117,8 +117,9 @@ class Transcriber(QObject):
             ext = os.path.splitext(file_path)[1].lower()
             is_video = ext in [".mp4", ".mov", ".mkv", ".avi", ".flv"]
             is_audio = ext in [".wav", ".mp3", ".ogg", ".flac"]
-            logger_manager.info(f"📁 文件类型: {ext}, 是视频: {is_video}, 是音频: {is_audio}", "transcriber",
-                                show_in_ui=True)
+            video_text = "是" if is_video else "不是"
+            audio_text = "是" if is_audio else "不是"
+            logger_manager.info(f"📁 文件类型: {ext}, 是视频: {video_text}, 是音频: {audio_text}", "transcriber", show_in_ui=True)
 
             if not is_video and not is_audio:
                 logger_manager.error(
