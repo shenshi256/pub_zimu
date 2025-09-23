@@ -35,6 +35,10 @@
 
 SRT, TXT, VTT, JSON
 
+45⃣ 项目的开源地址:
+https://gitee.com/lovegitee/pub_zimu
+
+
 🌐 可选项：
 
 ✅ 是否简体中文输出（适用于非中语音转写场景）
