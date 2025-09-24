@@ -69,3 +69,7 @@ github : https://github.com/shenshi256/pub_zimu
 
 # 觉得有帮助请赏杯咖啡
 ![img.png](img.png)
+
+# 效果图
+![img_1.png](img_1.png)
+![img_2.png](img_2.png)
