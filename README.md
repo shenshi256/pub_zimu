@@ -2,8 +2,10 @@
 
   <h3>本工具基于 OpenAI 开源模型 Whisper 封装，遵循 MIT License。</h3>
   <h6>双击即用, 最简单的字幕生成器</h6>
+
   对标剪映的识别字幕歌词
   ![img_4.png](img_4.png)
+
 
 1️⃣ 模型文件下载
 首次使用前，请下载 Whisper 模型文件（.pt 格式）：
