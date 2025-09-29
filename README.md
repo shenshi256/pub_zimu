@@ -2,6 +2,8 @@
 
   <h3>本工具基于 OpenAI 开源模型 Whisper 封装，遵循 MIT License。</h3>
   <h6>双击即用, 最简单的字幕生成器</h6>
+  对标剪映的识别字幕歌词
+  ![img_3.png](img_3.png)
 1️⃣ 模型文件下载
 首次使用前，请下载 Whisper 模型文件（.pt 格式）：
 
@@ -37,6 +39,7 @@ SRT, TXT, VTT, JSON
 
 5️⃣ 项目的开源地址:
 gitee : https://gitee.com/lovegitee/pub_zimu
+
 github : https://github.com/shenshi256/pub_zimu
 
 🌐 可选项：
