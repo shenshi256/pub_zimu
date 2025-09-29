@@ -12,7 +12,7 @@ build-obf.spec
 build.spec
 build-obf.bat
 obfuscated.py
-README.TD
+开发文档.md
 startup.bat
 .idea
 .gitignore
