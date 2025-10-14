@@ -6,7 +6,6 @@ model/
 dist_obfuscated/
 customer_service.jpg
 customer_service2.png
-resources/
 build.bat
 build-obf.spec
 build.spec
