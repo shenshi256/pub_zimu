@@ -1,0 +1,761 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
+  <property name="acceptDrops">
+   <bool>false</bool>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../../../CsharpProject/20250218_com.wxy.toutiao/Resources/favicon.ico</normaloff>../../../../CsharpProject/20250218_com.wxy.toutiao/Resources/favicon.ico</iconset>
+  </property>
+  <property name="styleSheet">
+   <string>QWidget#MainWindow {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #667eea, stop:1 #764ba2);
+    border-radius: 5px;
+}
+
+QWidget#centralWidget {
+    background: transparent;
+    border-radius: 5px;
+}
+
+QLabel {
+    color: white; 
+}
+
+QLabel#memoryRate {
+    color: white;
+    background: rgba(255, 255, 255, 15);
+    border-radius: 5px;
+    padding: 0px 10px 0px 0px;
+    font-size: 12px;
+}
+
+QTextEdit {
+    background: rgba(255, 255, 255, 90);
+    border: 1px solid rgba(255, 255, 255, 50);
+    border-radius: 5px;
+    padding: 8px;
+    color: #333;
+    font-size: 12px;
+}
+
+QTextEdit:focus {
+    border: 1px solid rgba(255, 255, 255, 150);
+    background: rgba(255, 255, 255, 95);
+}
+QComboBox {
+    background: rgba(255, 255, 255, 90);
+    border: 1px solid rgba(255, 255, 255, 50);
+    border-radius: 5px;
+    padding: 8px 30px 8px 12px;
+    color: #333;
+    font-size: 12px; 
+}
+
+QComboBox:hover {
+    
+     background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 100), stop:1 rgba(255, 255, 255, 80));
+    border: 1px solid rgba(255, 255, 255, 150);
+}
+
+QComboBox:focus {
+     border: 1px solid rgba(255, 255, 255, 150);
+    background: rgba(255, 255, 255, 95);
+    outline: none;
+}
+
+QComboBox QAbstractItemView {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    selection-background-color: #4CAF50;
+    color: #333;
+}
+
+
+QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 80), stop:1 rgba(255, 255, 255, 60));
+    border: 1px solid rgba(255, 255, 255, 100);
+    border-radius: 5px;
+    color: white; 
+    padding: 8px;
+    font-size: 12px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 100), stop:1 rgba(255, 255, 255, 80));
+    border: 1px solid rgba(255, 255, 255, 150);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 60), stop:1 rgba(255, 255, 255, 40));
+}
+
+QPushButton#pushButton_2 {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4facfe, stop:1 #00f2fe);
+    border: 1px solid rgba(79, 172, 254, 150);
+    color: white;
+}
+
+QPushButton#pushButton_2:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #5fbdff, stop:1 #10f3ff);
+    border: 1px solid rgba(95, 189, 255, 200);
+}
+
+QGroupBox {
+    color: white; 
+    font-size: 12px;
+    border: 1px solid rgba(255, 255, 255, 50);
+    border-radius: 5px;
+    margin-top: 10px;
+    background: rgba(255, 255, 255, 10);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 2px 5px 5px 5px;
+    background: transparent;
+}
+
+QRadioButton {
+    color: white;
+    spacing: 8px;
+    font-size: 12px;
+}
+
+QRadioButton::indicator {
+    width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    border: 1px solid rgba(255, 255, 255, 100);
+    background: rgba(255, 255, 255, 30);
+}
+
+QRadioButton::indicator:checked {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #4facfe, stop:1 #00f2fe);
+    border: 1px solid rgba(79, 172, 254, 150);
+}
+
+QRadioButton::indicator:checked:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #5fbdff, stop:1 #10f3ff);
+}
+
+QProgressBar {
+    border: 1px solid rgba(255, 255, 255, 50);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 20);
+    text-align: center;
+    color: white; 
+    font-size:8px;
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #4facfe, stop:1 #00f2fe);
+    border-radius: 5px;
+    margin: 1px;
+}</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QTextEdit" name="textEdit">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>381</width>
+          <height>31</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>31</height>
+         </size>
+        </property>
+        <property name="acceptDrops">
+         <bool>true</bool>
+        </property>
+        <property name="toolTip">
+         <string>请选择音视频文件</string>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="lineWrapMode">
+         <enum>QTextEdit::NoWrap</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>81</width>
+          <height>31</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>81</width>
+          <height>31</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>选择文件</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_4">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>31</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>31</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>项目使用说明</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QComboBox" name="comboBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>300</width>
+          <height>31</height>
+         </size>
+        </property>
+        <property name="currentText">
+         <string>请选择模型</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>请选择模型</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>large-v3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>small</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>81</width>
+          <height>31</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>81</width>
+          <height>31</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>开始生成</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_3">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>31</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>31</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>模型使用帮助</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <item>
+       <widget class="QGroupBox" name="outputType">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>61</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>61</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>输出类型</string>
+        </property>
+        <widget class="QWidget" name="layoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>21</y>
+           <width>371</width>
+           <height>33</height>
+          </rect>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <widget class="QRadioButton" name="srtType">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>31</height>
+             </size>
+            </property>
+            <property name="sizeIncrement">
+             <size>
+              <width>0</width>
+              <height>31</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>带时间条, 支持导入到剪辑工具中</string>
+            </property>
+            <property name="text">
+             <string>srt</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="txtType">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>31</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>31</height>
+             </size>
+            </property>
+            <property name="sizeIncrement">
+             <size>
+              <width>0</width>
+              <height>31</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>纯字幕文本</string>
+            </property>
+            <property name="text">
+             <string>txt</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="vttType">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>31</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>31</height>
+             </size>
+            </property>
+            <property name="sizeIncrement">
+             <size>
+              <width>0</width>
+              <height>31</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>vtt</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="jsonType">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>31</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>31</height>
+             </size>
+            </property>
+            <property name="sizeIncrement">
+             <size>
+              <width>0</width>
+              <height>31</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>json</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>61</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>61</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>系统信息</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="memoryRate">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>35</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>35</height>
+            </size>
+           </property>
+           <property name="sizeIncrement">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>进程: 内存 321M,CPU: 0% 
+系统: 内存 92%, CPU: 0%</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <item>
+       <widget class="QGroupBox" name="isDebug">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>51</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>51</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>开启调试</string>
+        </property>
+        <widget class="QRadioButton" name="noDebug">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>20</y>
+           <width>61</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>平时的时候, 应该关闭日志</string>
+         </property>
+         <property name="text">
+          <string>否</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+        <widget class="QRadioButton" name="yesDebug">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>20</y>
+           <width>61</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>记录日志, 常用于程序调试</string>
+         </property>
+         <property name="text">
+          <string>是</string>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="isChineseSimplified">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>51</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>51</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>中文时总是简体</string>
+        </property>
+        <widget class="QRadioButton" name="noSimple">
+         <property name="geometry">
+          <rect>
+           <x>100</x>
+           <y>20</y>
+           <width>81</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="sizeIncrement">
+          <size>
+           <width>0</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>由模型自行推断简体繁体, 港台腔多会推成繁体</string>
+         </property>
+         <property name="text">
+          <string>否</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+        <widget class="QRadioButton" name="yesSimple">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>20</y>
+           <width>71</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="sizeIncrement">
+          <size>
+           <width>0</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>统一使用简体, 如果是繁体则自动转换成简体</string>
+         </property>
+         <property name="text">
+          <string>是</string>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QProgressBar" name="progressBar">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>10</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>10</height>
+         </size>
+        </property>
+        <property name="value">
+         <number>24</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTextEdit" name="textEdit_2">
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
