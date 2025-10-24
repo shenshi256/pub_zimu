@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BatchFileList</class>
+ <widget class="QMainWindow" name="BatchFileList">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
+  <property name="acceptDrops">
+   <bool>false</bool>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../../../CsharpProject/20250218_com.wxy.toutiao/Resources/favicon.ico</normaloff>../../../../CsharpProject/20250218_com.wxy.toutiao/Resources/favicon.ico</iconset>
+  </property>
+  <property name="styleSheet">
+   <string>QWidget#BatchFileList {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #667eea, stop:1 #764ba2);
+    border-radius: 5px;
+}
+
+QWidget#centralWidget {
+    background: transparent;
+    border-radius: 5px;
+}
+
+QLabel {
+    color: white; 
+}
+
+QLabel#memoryRate {
+    color: white;
+    background: rgba(255, 255, 255, 15);
+    border-radius: 5px;
+    padding: 0px 10px 0px 0px;
+    font-size: 12px;
+}
+
+QTextEdit {
+    background: rgba(255, 255, 255, 90);
+    border: 1px solid rgba(255, 255, 255, 50);
+    border-radius: 5px;
+    padding: 8px;
+    color: #333;
+    font-size: 12px;
+}
+
+QTextEdit:focus {
+    border: 1px solid rgba(255, 255, 255, 150);
+    background: rgba(255, 255, 255, 95);
+}
+QComboBox {
+    background: rgba(255, 255, 255, 90);
+    border: 1px solid rgba(255, 255, 255, 50);
+    border-radius: 5px;
+    padding: 8px 30px 8px 12px;
+    color: #333;
+    font-size: 12px; 
+}
+
+QComboBox:hover {
+    
+     background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 100), stop:1 rgba(255, 255, 255, 80));
+    border: 1px solid rgba(255, 255, 255, 150);
+}
+
+QComboBox:focus {
+     border: 1px solid rgba(255, 255, 255, 150);
+    background: rgba(255, 255, 255, 95);
+    outline: none;
+}
+
+QComboBox QAbstractItemView {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    selection-background-color: #4CAF50;
+    color: #333;
+}
+
+
+QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 80), stop:1 rgba(255, 255, 255, 60));
+    border: 1px solid rgba(255, 255, 255, 100);
+    border-radius: 5px;
+    color: white; 
+    padding: 8px;
+    font-size: 12px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 100), stop:1 rgba(255, 255, 255, 80));
+    border: 1px solid rgba(255, 255, 255, 150);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 60), stop:1 rgba(255, 255, 255, 40));
+}
+
+QPushButton#pushButton_2 {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4facfe, stop:1 #00f2fe);
+    border: 1px solid rgba(79, 172, 254, 150);
+    color: white;
+}
+
+QPushButton#pushButton_2:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #5fbdff, stop:1 #10f3ff);
+    border: 1px solid rgba(95, 189, 255, 200);
+}
+
+QGroupBox {
+    color: white; 
+    font-size: 12px;
+    border: 1px solid rgba(255, 255, 255, 50);
+    border-radius: 5px;
+    margin-top: 10px;
+    background: rgba(255, 255, 255, 10);
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 2px 5px 5px 5px;
+    background: transparent;
+}
+
+QRadioButton {
+    color: white;
+    spacing: 8px;
+    font-size: 12px;
+}
+
+QRadioButton::indicator {
+    width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    border: 1px solid rgba(255, 255, 255, 100);
+    background: rgba(255, 255, 255, 30);
+}
+
+QRadioButton::indicator:checked {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #4facfe, stop:1 #00f2fe);
+    border: 1px solid rgba(79, 172, 254, 150);
+}
+
+QRadioButton::indicator:checked:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #5fbdff, stop:1 #10f3ff);
+}
+
+QProgressBar {
+    border: 1px solid rgba(255, 255, 255, 50);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 20);
+    text-align: center;
+    color: white; 
+    font-size:8px;
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #4facfe, stop:1 #00f2fe);
+    border-radius: 5px;
+    margin: 1px;
+}</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <layout class="QHBoxLayout" name="detailTitlebar">
+      <item>
+       <widget class="QLabel" name="detailTitle">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>31</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>文件列表</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="detailTitle_spacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="detailActions">
+        <item>
+         <widget class="QPushButton" name="addMoreBtn">
+          <property name="minimumSize">
+           <size>
+            <width>81</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>120</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>追加文件</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="clearBtn">
+          <property name="minimumSize">
+           <size>
+            <width>81</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>120</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>清空列表</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="selectAllBtn">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>140</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>全选/反选</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="closeDetailBtn">
+          <property name="minimumSize">
+           <size>
+            <width>81</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>120</width>
+            <height>31</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>关闭</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="fileCountBar">
+      <item>
+       <widget class="QLabel" name="fileCount">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>28</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>已选择文件：0 个</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QTableWidget" name="fileTable">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>1</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string>
+         /* 让 fileTable 的文本颜色为白色，并保持透明背景 */
+        QTableWidget#fileTable {
+            color: white;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 50);
+            gridline-color: rgba(255, 255, 255, 200);  
+        }
+        QTableWidget#fileTable::item {
+            color: white;
+            background-color: transparent;
+        }
+        QTableWidget#fileTable::item:selected { 
+            background: rgba(255, 255, 255, 40);
+            color: white;
+        }
+
+        QHeaderView::section {
+            background: transparent;
+            color: black;
+            border: none;
+            padding: 4px; 
+            border-right: 1px solid rgba(255, 255, 255, 120);
+            border-bottom: 1px solid rgba(255, 255, 255, 120);
+        } 
+            QHeaderView::section:horizontal {
+                background: transparent;
+            }
+            QHeaderView::section:vertical {
+                background: transparent;
+            }
+        QTableCornerButton::section {
+            background: transparent;
+            border: none;
+            font-weight: normal;   
+        }
+        QHeaderView {
+            font-weight: normal;
+        }
+
+      /* 头部容器透明，同时补齐上、左外边线 */
+            QTableWidget#fileTable QHeaderView {
+                background: transparent;
+                background-color: transparent;
+                border-top: 1px solid rgba(255, 255, 255, 120);
+                border-left: 1px solid rgba(255, 255, 255, 120);
+            }
+
+            /* 每个头部分段：右/下边线，用于网格效果 */
+            QTableWidget#fileTable QHeaderView::section {
+                background: transparent;
+                background-color: transparent;
+                border: none;
+                padding: 4px;
+                border-right: 1px solid rgba(255, 255, 255, 120);
+                border-bottom: 1px solid rgba(255, 255, 255, 120);
+                color: white;
+            }
+
+            /* 左上角拐角：补齐四边线，避免缺口 */
+            QTableWidget#fileTable QTableCornerButton::section {
+                background: transparent;
+                background-color: transparent;
+                border-top: 1px solid rgba(255, 255, 255, 120);
+                border-left: 1px solid rgba(255, 255, 255, 120);
+                border-right: 1px solid rgba(255, 255, 255, 120);
+                border-bottom: 1px solid rgba(255, 255, 255, 120);
+            }
+            QTableWidget#fileTable QHeaderView::section:horizontal { background: transparent; }
+            QTableWidget#fileTable QHeaderView::section:vertical { background: transparent; }
+            QTableWidget#fileTable QTableCornerButton::section {
+                background: transparent;
+                background-color: transparent;
+                border: none;
+            }
+
+
+        </string>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="alternatingRowColors">
+       <bool>true</bool>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::ExtendedSelection</enum>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
+      <property name="showGrid">
+       <bool>true</bool>
+      </property>
+      <property name="rowCount">
+       <number>0</number>
+      </property>
+      <property name="columnCount">
+       <number>7</number>
+      </property>
+      <column>
+       <property name="text">
+        <string>选择</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>文件名</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>文件路径</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>类型</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>大小</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>状态</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>移除</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

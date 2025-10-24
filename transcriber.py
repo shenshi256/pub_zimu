@@ -49,8 +49,12 @@ class Transcriber(QObject):
     transcription_finished = Signal()
     # ✅ 添加音频时长信号
     audio_duration_signal = Signal(float)
-    # ✅ 添加文件格式错误信号
+    # ✅ 添加无效文件格式信号
     invalid_file_format_signal = Signal()
+    # ✅ 添加批量处理信号
+    batch_file_started = Signal(str)  # 文件开始处理信号
+    batch_file_finished = Signal(str, bool)  # 文件路径, 是否成功
+    batch_all_finished = Signal()
     def __init__(self, model_path, debug_mode=False, log_file_path=None, export_format='srt', convert_to_simple=False):
         super().__init__()
         self.model_path = model_path
@@ -62,7 +66,10 @@ class Transcriber(QObject):
         self.convert_to_simple = convert_to_simple
 
         self.audio_duration = 0
-
+        # ✅ 批量处理相关变量
+        self.cached_model = None  # 缓存的模型
+        self.batch_files = []     # 批量文件队列
+        self.current_batch_index = 0  # 当前处理的文件索引
 
         # ✅ 如果启用调试模式，设置文件日志
         if self.debug_mode and self.log_file_path:
@@ -501,7 +508,235 @@ class Transcriber(QObject):
 
         self._safe_file_write(vtt_file, write_vtt, "VTT")
 
+    # ✅ 批量处理相关方法
+    @Slot(list)
+    def transcribe_batch(self, file_paths):
+        """批量转录文件，只加载一次模型"""
+        try:
+            self.batch_files = file_paths
+            self.current_batch_index = 0
 
+            if not self.batch_files:
+                logger_manager.warning("❌ 批量文件列表为空", "transcriber", show_in_ui=True)
+                self.batch_all_finished.emit()
+                return
+
+            logger_manager.info(f"🚀 开始批量转录，共 {len(self.batch_files)} 个文件", "transcriber", show_in_ui=True)
+
+            # 只加载一次模型
+            self._load_model_once()
+
+            # 开始处理第一个文件
+            self._process_next_batch_file()
+
+        except Exception as e:
+            logger_manager.error(f"❌ 批量转录初始化失败: {str(e)}", "transcriber", show_in_ui=True)
+            self.batch_all_finished.emit()
+
+    @Slot()
+    def transcribe_batch_from_stored(self):
+        """从存储的文件列表开始批量转录（解决Qt信号槽参数传递问题）"""
+        try:
+            if not hasattr(self, 'batch_files') or not self.batch_files:
+                logger_manager.warning("❌ 批量文件列表为空", "transcriber", show_in_ui=True)
+                self.batch_all_finished.emit()
+                return
+
+            self.current_batch_index = 0
+            logger_manager.info(f"🚀 开始批量转录，共 {len(self.batch_files)} 个文件", "transcriber", show_in_ui=True)
+
+            # 只加载一次模型
+            self._load_model_once()
+
+            # 开始处理第一个文件
+            self._process_next_batch_file()
+
+        except Exception as e:
+            logger_manager.error(f"❌ 批量转录初始化失败: {str(e)}", "transcriber", show_in_ui=True)
+            self.batch_all_finished.emit()
+
+    def _load_model_once(self):
+        """只加载一次模型并缓存"""
+        if self.cached_model is None:
+            logger_manager.info(f"🤖 批量模式：加载Whisper模型: {self.model_path}", "transcriber", show_in_ui=True)
+            try:
+                self.cached_model = whisper.load_model(self.model_path)
+                logger_manager.info(f"✅ 批量模式：模型加载成功，将复用于所有文件", "transcriber", show_in_ui=True)
+            except Exception as e:
+                logger_manager.error(f"❌ 批量模式：模型加载失败: {str(e)}", "transcriber", show_in_ui=True)
+                raise
+
+    def _process_next_batch_file(self):
+        """处理下一个批量文件"""
+        if self.current_batch_index >= len(self.batch_files):
+            # 所有文件处理完成
+            self._cleanup_batch_model()
+            logger_manager.info(f"🎉 批量转录全部完成！", "transcriber", show_in_ui=True)
+            self.batch_all_finished.emit()
+            return
+
+        current_file = self.batch_files[self.current_batch_index]
+        # logger_manager.info(f"📁 批量处理 ({self.current_batch_index + 1}/{len(self.batch_files)}): {current_file}",
+        #                     "transcriber", show_in_ui=True)
+        # 发送文件开始处理信号，让主窗口标记为"处理中"
+        self.batch_file_started.emit(current_file)
+        # 计算整体批量进度
+        overall_progress = int((self.current_batch_index / len(self.batch_files)) * 100)
+        logger_manager.info(
+            f"📁 批量处理 ({self.current_batch_index + 1}/{len(self.batch_files)}) [整体进度: {overall_progress}%]: {os.path.basename(current_file)}",
+            "transcriber", show_in_ui=True)
+        try:
+            # 使用缓存的模型处理单个文件
+            success = self._transcribe_single_file_with_cached_model(current_file)
+            self.batch_file_finished.emit(current_file, success)
+
+        except Exception as e:
+            logger_manager.error(f"❌ 批量处理文件失败: {current_file}, 错误: {str(e)}", "transcriber", show_in_ui=True)
+            self.batch_file_finished.emit(current_file, False)
+
+        # 处理下一个文件
+        self.current_batch_index += 1
+        self._process_next_batch_file()
+
+    def _transcribe_single_file_with_cached_model(self, file_path):
+        """使用缓存的模型转录单个文件"""
+        try:
+            # 发送转录开始信号，启动进度条模拟
+            self.transcription_started.emit()
+
+            # 文件检查逻辑（复用原有逻辑）
+            if not os.path.exists(file_path):
+                logger_manager.error(f"❌ 文件不存在: {file_path}", "transcriber", show_in_ui=True)
+                return False
+
+            # 文件格式检查
+            ext = os.path.splitext(file_path)[1].lower()
+            is_video = ext in [".mp4", ".mov", ".mkv", ".avi", ".flv"]
+            is_audio = ext in [".wav", ".mp3", ".ogg", ".flac"]
+
+            if not is_video and not is_audio:
+                logger_manager.error(f"❌ 不支持的文件格式: {ext}", "transcriber", show_in_ui=True)
+                return False
+            # 初始进度
+            self.progress_signal.emit(5)
+            logger_manager.info(f"🔄 [5%] 开始处理文件: {os.path.basename(file_path)}", "transcriber", show_in_ui=True)
+
+            # 音频提取逻辑（复用原有逻辑）
+            audio_path = None
+            temp_audio_created = False
+
+            if is_video:
+                # 提取音频到临时文件
+                import tempfile
+                import uuid
+                temp_dir = tempfile.gettempdir()
+                temp_filename = f"whisper_batch_{uuid.uuid4().hex[:8]}.wav"
+                audio_path = os.path.join(temp_dir, temp_filename)
+                temp_audio_created = True
+
+
+                self.progress_signal.emit(10)
+                logger_manager.info(f"🔄 [10%] 提取音频: {os.path.basename(file_path)}", "transcriber", show_in_ui=True)
+
+                # 使用ffmpeg提取音频（复用原有逻辑）
+                ffmpeg_cmd = [
+                    ffmpeg_path, "-i", file_path, "-vn", "-acodec", "pcm_s16le",
+                    "-ar", "16000", "-ac", "1", "-y", audio_path
+                ]
+
+                startupinfo = None
+                if os.name == 'nt':
+                    startupinfo = subprocess.STARTUPINFO()
+                    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                    startupinfo.wShowWindow = subprocess.SW_HIDE
+
+                result = subprocess.run(ffmpeg_cmd, capture_output=True, text=True,
+                                        timeout=300, encoding='utf-8', errors='ignore',
+                                        startupinfo=startupinfo)
+
+                if result.returncode != 0:
+                    logger_manager.error(f"❌ ffmpeg 提取音频失败: {result.stderr}", "transcriber", show_in_ui=True)
+                    return False
+
+                self.progress_signal.emit(20)
+                logger_manager.info(f"✅ [20%] 音频提取完成", "transcriber", show_in_ui=True)
+            else:
+                audio_path = file_path
+                self.progress_signal.emit(15)
+                logger_manager.info(f"🔄 [15%] 直接使用音频文件", "transcriber", show_in_ui=True)
+
+                # 获取音频时长并发送信号
+            try:
+                audio_clip = mp.AudioFileClip(audio_path)
+                duration = audio_clip.duration
+                audio_clip.close()
+                self.audio_duration_signal.emit(duration)
+                logger_manager.info(f"📊 音频时长: {duration:.2f}秒", "transcriber", show_in_ui=True)
+            except Exception as e:
+                logger_manager.warning(f"⚠️ 无法获取音频时长: {str(e)}", "transcriber", show_in_ui=True)
+                duration = 0
+
+            # 使用缓存的模型进行转录
+            # logger_manager.info(f"⏳ 使用缓存模型转录: {os.path.basename(file_path)}", "transcriber", show_in_ui=True)
+            self.progress_signal.emit(30)
+            logger_manager.info(f"⏳ [30%] 使用缓存模型转录: {os.path.basename(file_path)}", "transcriber", show_in_ui=True)
+
+            # 保存原始的 stdout 和 stderr
+            original_stdout = sys.stdout
+            original_stderr = sys.stderr
+            try:
+                sys.stdout = io.StringIO()
+                sys.stderr = io.StringIO()
+
+                result = self.cached_model.transcribe(audio_path, verbose=False)
+                # logger_manager.info(f"✅ 转录完成: {os.path.basename(file_path)}", "transcriber", show_in_ui=True)
+                self.progress_signal.emit(85)
+                logger_manager.info(f"✅ [85%] 转录完成: {os.path.basename(file_path)}", "transcriber", show_in_ui=True)
+
+            finally:
+                sys.stdout = original_stdout
+                sys.stderr = original_stderr
+
+            # 保存结果
+            # logger_manager.info(f"💾 保存转录结果: {os.path.basename(file_path)}", "transcriber", show_in_ui=True)
+            self.progress_signal.emit(90)
+            logger_manager.info(f"💾 [90%] 保存转录结果: {os.path.basename(file_path)}", "transcriber", show_in_ui=True)
+            if self.export_format == 'srt':
+                self.save_as_srt(result, file_path)
+            elif self.export_format == 'txt':
+                self.save_as_txt(result, file_path)
+            elif self.export_format == 'json':
+                self.save_as_json(result, file_path)
+            elif self.export_format == 'vtt':
+                self.save_as_vtt(result, file_path)
+
+            # 清理临时文件
+            if temp_audio_created and audio_path and os.path.exists(audio_path):
+                os.remove(audio_path)
+            # 完成进度
+            self.progress_signal.emit(100)
+            logger_manager.info(f"🎉 [100%] 文件处理完成: {os.path.basename(file_path)}", "transcriber", show_in_ui=True)
+
+            # 发送转录完成信号
+            self.transcription_finished.emit()
+
+            return True
+
+        except Exception as e:
+            logger_manager.error(f"❌ 转录文件失败: {file_path}, 错误: {str(e)}", "transcriber", show_in_ui=True)
+            # 发送转录完成信号，即使失败也要停止进度条
+            self.transcription_finished.emit()
+            return False
+
+    def _cleanup_batch_model(self):
+        """清理批量处理的缓存模型"""
+        if self.cached_model is not None:
+            logger_manager.info(f"🧹 批量处理完成，清理缓存模型", "transcriber", show_in_ui=True)
+            self.cached_model = None
+            # 多次垃圾回收
+            for _ in range(3):
+                gc.collect()
+            logger_manager.info(f"✅ 模型资源清理完成", "transcriber", show_in_ui=True)
 
     # def save_as_srt(self, result, file_path, duration):
     #     # ✅ 验证结果参数

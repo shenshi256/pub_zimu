@@ -17,7 +17,7 @@ import psutil
 import base64
 
 # 在文件开头添加版本号定义
-VERSION = "V1.0.1"
+VERSION = "V1.0.2"
 UNKNOWNCPU = "UNKNOWN_CPU"
 UNKNOWNMOTHERBOARD = "UNKNOWN_MOTHERBOARD"
 
@@ -120,7 +120,7 @@ def show_message_with_icon(parent, icon_type, title, message, icon_path="favicon
     """显示带图标的消息框"""
     msg_box = QMessageBox(parent)
     # 设置当前的弹窗窗口始终保持在最顶层
-    msg_box.setWindowFlags(msg_box.windowFlags() | Qt.WindowStaysOnTopHint)
+    msg_box.setWindowFlags(msg_box.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
 
     # 添加自定义样式
     msg_box.setStyleSheet("""
@@ -162,25 +162,85 @@ def show_message_with_icon(parent, icon_type, title, message, icon_path="favicon
     msg_box.setText(message)
     return msg_box.exec()
 
-
 def show_info(parent, title, message, icon_path="favicon.ico"):
     """显示信息提示框"""
-    return show_message_with_icon(parent, QMessageBox.Information, title, message, icon_path)
+    return show_message_with_icon(parent, QMessageBox.Icon.Information, title, message, icon_path)
 
 
 def show_warning(parent, title, message, icon_path="favicon.ico"):
     """显示警告提示框"""
-    return show_message_with_icon(parent, QMessageBox.Warning, title, message, icon_path)
+    return show_message_with_icon(parent, QMessageBox.Icon.Warning, title, message, icon_path)
 
 
 def show_error(parent, title, message, icon_path="favicon.ico"):
     """显示错误提示框"""
-    return show_message_with_icon(parent, QMessageBox.Critical, title, message, icon_path)
+    return show_message_with_icon(parent, QMessageBox.Icon.Critical, title, message, icon_path)
 
 
 def show_question(parent, title, message, icon_path="favicon.ico"):
     """显示询问对话框"""
-    return show_message_with_icon(parent, QMessageBox.Question, title, message, icon_path)
+    return show_message_with_icon(parent, QMessageBox.Icon.Question, title, message, icon_path)
+
+
+def show_confirm(parent, title, message, icon_path="favicon.ico"):
+    """显示确认对话框，返回True表示确定，False表示取消"""
+    msg_box = QMessageBox(parent)
+    # 设置当前的弹窗窗口始终保持在最顶层
+    msg_box.setWindowFlags(msg_box.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
+
+    # 添加自定义样式
+    msg_box.setStyleSheet("""
+        QMessageBox {
+            background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #667eea, stop:1 #764ba2);
+            border-radius: 5px;
+            color: white;
+        }
+        QMessageBox QLabel {
+            color: white;
+            font-size: 14px;
+            padding: 10px;
+        }
+        QMessageBox QPushButton {
+            background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 80), stop:1 rgba(255, 255, 255, 60));
+            border: 1px solid rgba(255, 255, 255, 100);
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            padding: 8px 16px;
+            min-width: 80px;
+        }
+        QMessageBox QPushButton:hover {
+            background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 100), stop:1 rgba(255, 255, 255, 80));
+            border: 1px solid rgba(255, 255, 255, 150);
+        }
+        QMessageBox QPushButton:pressed {
+            background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 60), stop:1 rgba(255, 255, 255, 40));
+        }
+    """)
+
+    # 设置窗口图标
+    icon_full_path = get_resource_path(icon_path)
+    if os.path.exists(icon_full_path):
+        msg_box.setWindowIcon(QIcon(icon_full_path))
+
+    msg_box.setIcon(QMessageBox.Icon.Question)
+    msg_box.setWindowTitle(title)
+    msg_box.setText(message)
+
+    # 添加确定和取消按钮
+    msg_box.setStandardButtons(QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel)
+    msg_box.setDefaultButton(QMessageBox.StandardButton.Cancel)  # 默认选中取消按钮，更安全
+
+    # 设置按钮文本为中文
+    ok_button = msg_box.button(QMessageBox.StandardButton.Ok)
+    cancel_button = msg_box.button(QMessageBox.StandardButton.Cancel)
+    if ok_button:
+        ok_button.setText("确定")
+    if cancel_button:
+        cancel_button.setText("取消")
+
+    result = msg_box.exec()
+    return result == QMessageBox.StandardButton.Ok
 
 
 # 添加内存监控函数
@@ -225,7 +285,6 @@ def log_cpu_usage(stage_name):
     except Exception as e:
         logger_manager.info(f"🖥️ [{stage_name}] 无法获取CPU信息: {e}", "transcriber")
 
-
 # 添加综合系统监控函数
 def log_system_usage(stage_name):
     """综合监控内存和CPU使用情况"""
@@ -247,7 +306,6 @@ def log_system_usage(stage_name):
         )
     except Exception as e:
         logger_manager.info(f"📊 [{stage_name}] 无法获取系统信息: {e}", "transcriber")
-
 
 # 这个是专门用来给UI线程使用的格式化的内容
 def get_system_monitor_info():
@@ -325,3 +383,14 @@ def setup_label_icon(label, icon_path="favicon.ico"):
             label.setPixmap(pixmap)
     else:
         print(f"Warning: Icon file not found: {icon_full_path}")
+
+# 按照1024进行数值的格式化'B', 'KB', 'MB', 'GB', 'TB'
+def format_size(size):
+    """按照1024进行数值的格式化'B', 'KB', 'MB', 'GB', 'TB'"""
+    units = ['B', 'KB', 'MB', 'GB', 'TB']
+    s = float(size)
+    i = 0
+    while s >= 1024 and i < len(units) - 1:
+        s /= 1024.0
+        i += 1
+    return f"{s:.2f} {units[i]}"

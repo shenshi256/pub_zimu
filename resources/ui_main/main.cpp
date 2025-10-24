@@ -2,6 +2,7 @@
 #include "auth.h"
 #include "helpshow.h"
 #include "splashscreen.h"
+#include "batchfilelist.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
@@ -12,13 +13,16 @@ int main(int argc, char *argv[])
 //    MainWindow w;
 //    w.show();
 
+    BatchFileList b;
+    b.show();
+
     // 帮助窗体
 //HelpShow h;
 //h.show();
 
     //授权窗体
-    Auth w;
-       w.show();
+//    Auth w;
+//       w.show();
 
 //    SplashScreen s;
 //    s.show();

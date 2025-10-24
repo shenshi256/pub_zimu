@@ -24,7 +24,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.setWindowModality(Qt.WindowModality.NonModal)
+        MainWindow.setWindowModality(Qt.NonModal)
         MainWindow.resize(600, 400)
         MainWindow.setMinimumSize(QSize(600, 400))
         MainWindow.setMaximumSize(QSize(800, 600))
@@ -49,7 +49,7 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.textEdit.sizePolicy().hasHeightForWidth())
         self.textEdit.setSizePolicy(sizePolicy)
-        self.textEdit.setMinimumSize(QSize(381, 31))
+        self.textEdit.setMinimumSize(QSize(311, 31))
         self.textEdit.setMaximumSize(QSize(16777215, 31))
         self.textEdit.setAcceptDrops(True)
         self.textEdit.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -68,6 +68,15 @@ class Ui_MainWindow(object):
         self.pushButton.setMaximumSize(QSize(81, 31))
 
         self.horizontalLayout.addWidget(self.pushButton)
+
+        self.pushButton_selectDir = QPushButton(self.centralWidget)
+        self.pushButton_selectDir.setObjectName(u"pushButton_selectDir")
+        sizePolicy1.setHeightForWidth(self.pushButton_selectDir.sizePolicy().hasHeightForWidth())
+        self.pushButton_selectDir.setSizePolicy(sizePolicy1)
+        self.pushButton_selectDir.setMinimumSize(QSize(81, 31))
+        self.pushButton_selectDir.setMaximumSize(QSize(81, 31))
+
+        self.horizontalLayout.addWidget(self.pushButton_selectDir)
 
         self.pushButton_4 = QPushButton(self.centralWidget)
         self.pushButton_4.setObjectName(u"pushButton_4")
@@ -229,6 +238,34 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_4.addWidget(self.isChineseSimplified)
 
+        self.overAfter = QGroupBox(self.centralWidget)
+        self.overAfter.setObjectName(u"overAfter")
+        self.overAfter.setMinimumSize(QSize(0, 51))
+        self.overAfter.setMaximumSize(QSize(16777215, 51))
+        self.layoutWidget_overAfter = QWidget(self.overAfter)
+        self.layoutWidget_overAfter.setObjectName(u"layoutWidget_overAfter")
+        self.layoutWidget_overAfter.setGeometry(QRect(10, 21, 220, 33))
+        self.horizontalLayout_overAfter = QHBoxLayout(self.layoutWidget_overAfter)
+        self.horizontalLayout_overAfter.setSpacing(6)
+        self.horizontalLayout_overAfter.setContentsMargins(11, 11, 11, 11)
+        self.horizontalLayout_overAfter.setObjectName(u"horizontalLayout_overAfter")
+        self.horizontalLayout_overAfter.setContentsMargins(0, 0, 0, 0)
+        self.radioShutdown = QRadioButton(self.layoutWidget_overAfter)
+        self.radioShutdown.setObjectName(u"radioShutdown")
+        self.radioShutdown.setMinimumSize(QSize(0, 31))
+
+        self.horizontalLayout_overAfter.addWidget(self.radioShutdown)
+
+        self.radioDoNothing = QRadioButton(self.layoutWidget_overAfter)
+        self.radioDoNothing.setObjectName(u"radioDoNothing")
+        self.radioDoNothing.setMinimumSize(QSize(0, 31))
+        self.radioDoNothing.setChecked(True)
+
+        self.horizontalLayout_overAfter.addWidget(self.radioDoNothing)
+
+
+        self.horizontalLayout_4.addWidget(self.overAfter)
+
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_4)
 
@@ -251,6 +288,32 @@ class Ui_MainWindow(object):
 
 
         self.verticalLayout_2.addLayout(self.verticalLayout)
+
+        self.horizontalLayout_statusBar = QHBoxLayout()
+        self.horizontalLayout_statusBar.setSpacing(8)
+        self.horizontalLayout_statusBar.setObjectName(u"horizontalLayout_statusBar")
+        self.horizontalLayout_statusBar.setContentsMargins(0, 0, 0, 0)
+        self.selectedSummary = QLabel(self.centralWidget)
+        self.selectedSummary.setObjectName(u"selectedSummary")
+        sizePolicy.setHeightForWidth(self.selectedSummary.sizePolicy().hasHeightForWidth())
+        self.selectedSummary.setSizePolicy(sizePolicy)
+        self.selectedSummary.setMinimumSize(QSize(0, 31))
+        self.selectedSummary.setMaximumSize(QSize(16777215, 31))
+        self.selectedSummary.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+
+        self.horizontalLayout_statusBar.addWidget(self.selectedSummary)
+
+        self.viewDetailBtn = QPushButton(self.centralWidget)
+        self.viewDetailBtn.setObjectName(u"viewDetailBtn")
+        sizePolicy1.setHeightForWidth(self.viewDetailBtn.sizePolicy().hasHeightForWidth())
+        self.viewDetailBtn.setSizePolicy(sizePolicy1)
+        self.viewDetailBtn.setMinimumSize(QSize(81, 31))
+        self.viewDetailBtn.setMaximumSize(QSize(81, 31))
+
+        self.horizontalLayout_statusBar.addWidget(self.viewDetailBtn)
+
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout_statusBar)
 
         MainWindow.setCentralWidget(self.centralWidget)
 
@@ -415,6 +478,7 @@ class Ui_MainWindow(object):
         self.textEdit.setToolTip(QCoreApplication.translate("MainWindow", u"\u8bf7\u9009\u62e9\u97f3\u89c6\u9891\u6587\u4ef6", None))
 #endif // QT_CONFIG(tooltip)
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"\u9009\u62e9\u6587\u4ef6", None))
+        self.pushButton_selectDir.setText(QCoreApplication.translate("MainWindow", u"\u9009\u62e9\u76ee\u5f55", None))
         self.pushButton_4.setText(QCoreApplication.translate("MainWindow", u"\u9879\u76ee\u4f7f\u7528\u8bf4\u660e", None))
         self.comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"\u8bf7\u9009\u62e9\u6a21\u578b", None))
         self.comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"large-v3", None))
@@ -455,5 +519,10 @@ class Ui_MainWindow(object):
         self.yesSimple.setToolTip(QCoreApplication.translate("MainWindow", u"\u7edf\u4e00\u4f7f\u7528\u7b80\u4f53, \u5982\u679c\u662f\u7e41\u4f53\u5219\u81ea\u52a8\u8f6c\u6362\u6210\u7b80\u4f53", None))
 #endif // QT_CONFIG(tooltip)
         self.yesSimple.setText(QCoreApplication.translate("MainWindow", u"\u662f", None))
+        self.overAfter.setTitle(QCoreApplication.translate("MainWindow", u"\u5b8c\u6210\u540e\u5173\u673a", None))
+        self.radioShutdown.setText(QCoreApplication.translate("MainWindow", u"\u662f", None))
+        self.radioDoNothing.setText(QCoreApplication.translate("MainWindow", u"\u5426", None))
+        self.selectedSummary.setText(QCoreApplication.translate("MainWindow", u"\u5df2\u9009\u62e9 0 \u4e2a\u6587\u4ef6", None))
+        self.viewDetailBtn.setText(QCoreApplication.translate("MainWindow", u"\u67e5\u770b\u8be6\u60c5", None))
     # retranslateUi
 

@@ -36,6 +36,7 @@ public:
     QHBoxLayout *horizontalLayout;
     QTextEdit *textEdit;
     QPushButton *pushButton;
+    QPushButton *pushButton_selectDir;
     QPushButton *pushButton_4;
     QHBoxLayout *horizontalLayout_2;
     QComboBox *comboBox;
@@ -59,9 +60,17 @@ public:
     QGroupBox *isChineseSimplified;
     QRadioButton *noSimple;
     QRadioButton *yesSimple;
+    QGroupBox *overAfter;
+    QWidget *layoutWidget_overAfter;
+    QHBoxLayout *horizontalLayout_overAfter;
+    QRadioButton *radioShutdown;
+    QRadioButton *radioDoNothing;
     QVBoxLayout *verticalLayout;
     QProgressBar *progressBar;
     QTextEdit *textEdit_2;
+    QHBoxLayout *horizontalLayout_statusBar;
+    QLabel *selectedSummary;
+    QPushButton *viewDetailBtn;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -92,7 +101,7 @@ public:
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(textEdit->sizePolicy().hasHeightForWidth());
         textEdit->setSizePolicy(sizePolicy);
-        textEdit->setMinimumSize(QSize(381, 31));
+        textEdit->setMinimumSize(QSize(311, 31));
         textEdit->setMaximumSize(QSize(16777215, 31));
         textEdit->setAcceptDrops(true);
         textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -111,6 +120,15 @@ public:
         pushButton->setMaximumSize(QSize(81, 31));
 
         horizontalLayout->addWidget(pushButton);
+
+        pushButton_selectDir = new QPushButton(centralWidget);
+        pushButton_selectDir->setObjectName(QStringLiteral("pushButton_selectDir"));
+        sizePolicy1.setHeightForWidth(pushButton_selectDir->sizePolicy().hasHeightForWidth());
+        pushButton_selectDir->setSizePolicy(sizePolicy1);
+        pushButton_selectDir->setMinimumSize(QSize(81, 31));
+        pushButton_selectDir->setMaximumSize(QSize(81, 31));
+
+        horizontalLayout->addWidget(pushButton_selectDir);
 
         pushButton_4 = new QPushButton(centralWidget);
         pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
@@ -269,6 +287,34 @@ public:
 
         horizontalLayout_4->addWidget(isChineseSimplified);
 
+        overAfter = new QGroupBox(centralWidget);
+        overAfter->setObjectName(QStringLiteral("overAfter"));
+        overAfter->setMinimumSize(QSize(0, 51));
+        overAfter->setMaximumSize(QSize(16777215, 51));
+        layoutWidget_overAfter = new QWidget(overAfter);
+        layoutWidget_overAfter->setObjectName(QStringLiteral("layoutWidget_overAfter"));
+        layoutWidget_overAfter->setGeometry(QRect(10, 21, 220, 33));
+        horizontalLayout_overAfter = new QHBoxLayout(layoutWidget_overAfter);
+        horizontalLayout_overAfter->setSpacing(6);
+        horizontalLayout_overAfter->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_overAfter->setObjectName(QStringLiteral("horizontalLayout_overAfter"));
+        horizontalLayout_overAfter->setContentsMargins(0, 0, 0, 0);
+        radioShutdown = new QRadioButton(layoutWidget_overAfter);
+        radioShutdown->setObjectName(QStringLiteral("radioShutdown"));
+        radioShutdown->setMinimumSize(QSize(0, 31));
+
+        horizontalLayout_overAfter->addWidget(radioShutdown);
+
+        radioDoNothing = new QRadioButton(layoutWidget_overAfter);
+        radioDoNothing->setObjectName(QStringLiteral("radioDoNothing"));
+        radioDoNothing->setMinimumSize(QSize(0, 31));
+        radioDoNothing->setChecked(true);
+
+        horizontalLayout_overAfter->addWidget(radioDoNothing);
+
+
+        horizontalLayout_4->addWidget(overAfter);
+
 
         verticalLayout_2->addLayout(horizontalLayout_4);
 
@@ -291,6 +337,32 @@ public:
 
 
         verticalLayout_2->addLayout(verticalLayout);
+
+        horizontalLayout_statusBar = new QHBoxLayout();
+        horizontalLayout_statusBar->setSpacing(8);
+        horizontalLayout_statusBar->setObjectName(QStringLiteral("horizontalLayout_statusBar"));
+        horizontalLayout_statusBar->setContentsMargins(0, 0, 0, 0);
+        selectedSummary = new QLabel(centralWidget);
+        selectedSummary->setObjectName(QStringLiteral("selectedSummary"));
+        sizePolicy.setHeightForWidth(selectedSummary->sizePolicy().hasHeightForWidth());
+        selectedSummary->setSizePolicy(sizePolicy);
+        selectedSummary->setMinimumSize(QSize(0, 31));
+        selectedSummary->setMaximumSize(QSize(16777215, 31));
+        selectedSummary->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+
+        horizontalLayout_statusBar->addWidget(selectedSummary);
+
+        viewDetailBtn = new QPushButton(centralWidget);
+        viewDetailBtn->setObjectName(QStringLiteral("viewDetailBtn"));
+        sizePolicy1.setHeightForWidth(viewDetailBtn->sizePolicy().hasHeightForWidth());
+        viewDetailBtn->setSizePolicy(sizePolicy1);
+        viewDetailBtn->setMinimumSize(QSize(81, 31));
+        viewDetailBtn->setMaximumSize(QSize(81, 31));
+
+        horizontalLayout_statusBar->addWidget(viewDetailBtn);
+
+
+        verticalLayout_2->addLayout(horizontalLayout_statusBar);
 
         MainWindow->setCentralWidget(centralWidget);
 
@@ -456,6 +528,7 @@ public:
         textEdit->setToolTip(QApplication::translate("MainWindow", "\350\257\267\351\200\211\346\213\251\351\237\263\350\247\206\351\242\221\346\226\207\344\273\266", 0));
 #endif // QT_NO_TOOLTIP
         pushButton->setText(QApplication::translate("MainWindow", "\351\200\211\346\213\251\346\226\207\344\273\266", 0));
+        pushButton_selectDir->setText(QApplication::translate("MainWindow", "\351\200\211\346\213\251\347\233\256\345\275\225", 0));
         pushButton_4->setText(QApplication::translate("MainWindow", "\351\241\271\347\233\256\344\275\277\347\224\250\350\257\264\346\230\216", 0));
         comboBox->clear();
         comboBox->insertItems(0, QStringList()
@@ -498,6 +571,11 @@ public:
         yesSimple->setToolTip(QApplication::translate("MainWindow", "\347\273\237\344\270\200\344\275\277\347\224\250\347\256\200\344\275\223, \345\246\202\346\236\234\346\230\257\347\271\201\344\275\223\345\210\231\350\207\252\345\212\250\350\275\254\346\215\242\346\210\220\347\256\200\344\275\223", 0));
 #endif // QT_NO_TOOLTIP
         yesSimple->setText(QApplication::translate("MainWindow", "\346\230\257", 0));
+        overAfter->setTitle(QApplication::translate("MainWindow", "\345\256\214\346\210\220\345\220\216\345\205\263\346\234\272", 0));
+        radioShutdown->setText(QApplication::translate("MainWindow", "\346\230\257", 0));
+        radioDoNothing->setText(QApplication::translate("MainWindow", "\345\220\246", 0));
+        selectedSummary->setText(QApplication::translate("MainWindow", "\345\267\262\351\200\211\346\213\251 0 \344\270\252\346\226\207\344\273\266", 0));
+        viewDetailBtn->setText(QApplication::translate("MainWindow", "\346\237\245\347\234\213\350\257\246\346\203\205", 0));
     } // retranslateUi
 
 };

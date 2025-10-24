@@ -16,15 +16,18 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     auth.cpp \
     helpshow.cpp \
-    splashscreen.cpp
+    splashscreen.cpp \
+    batchfilelist.cpp
 
 HEADERS  += mainwindow.h \
     auth.h \
     helpshow.h \
-    splashscreen.h
+    splashscreen.h \
+    batchfilelist.h
 
 FORMS    += mainwindow.ui \
     auth.ui \
     helpshow.ui \
     disclaimers.ui \
-    splashscreen.ui
+    splashscreen.ui \
+    batchfilelist.ui

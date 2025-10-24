@@ -1,0 +1,13 @@
+INPUT(
+./release\main.o
+./release\mainwindow.o
+./release\auth.o
+./release\helpshow.o
+./release\splashscreen.o
+./release\batchfilelist.o
+./release\moc_mainwindow.o
+./release\moc_auth.o
+./release\moc_helpshow.o
+./release\moc_splashscreen.o
+./release\moc_batchfilelist.o
+);
